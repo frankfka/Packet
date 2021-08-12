@@ -1,5 +1,5 @@
 import React from 'react';
-import { useIpfs } from '../../context/ipfs/IpfsContext';
+import { useIpfs } from '../../../context/ipfs/IpfsContext';
 
 const HomePageIpfsSection = () => {
   const ipfsContext = useIpfs();

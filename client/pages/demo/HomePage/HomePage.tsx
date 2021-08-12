@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { IpfsContextProvider, useIpfs } from '../../context/ipfs/IpfsContext';
-import { OrbitDbContextProvider } from '../../context/orbitDb/orbitDbContext';
-import { StoreCacheContextProvider } from '../../context/orbitDb/stores/storeCacheContext';
+import {
+  IpfsContextProvider,
+  useIpfs,
+} from '../../../context/ipfs/IpfsContext';
+import { OrbitDbContextProvider } from '../../../context/orbitDb/orbitDbContext';
+import { StoreCacheContextProvider } from '../../../context/orbitDb/stores/storeCacheContext';
 import HomePageIpfsSection from './HomePageIpfsSection';
 import HomePageKvStoreSection from './HomePageKvStoreSection';
 import HomePageOrbitDbSection from './HomePageOrbitDbSection';

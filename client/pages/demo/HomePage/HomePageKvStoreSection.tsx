@@ -3,8 +3,8 @@ import React, { MouseEventHandler, useState } from 'react';
 import {
   GetKvStoreParams,
   KvStoreData,
-} from '../../context/orbitDb/stores/keyValue/kvStoreUtils';
-import { useKvStore } from '../../context/orbitDb/stores/keyValue/useKvStore';
+} from '../../../context/orbitDb/stores/keyValue/kvStoreUtils';
+import { useKvStore } from '../../../context/orbitDb/stores/keyValue/useKvStore';
 
 const KvStorePicker: React.FC<{
   setStoreParams(p: GetKvStoreParams): void;

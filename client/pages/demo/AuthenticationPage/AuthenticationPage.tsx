@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { EthereumContextProvider } from '../../context/ethereum/ethereumContext';
+import { EthereumContextProvider } from '../../../context/ethereum/ethereumContext';
 import AuthWithEthereumContent from './AuthWithEthereumContent';
 
 const AuthenticationPage = () => {

@@ -1,5 +1,5 @@
 import React, { MouseEventHandler, useEffect, useState } from 'react';
-import { useEthereumContext } from '../../context/ethereum/ethereumContext';
+import { useEthereumContext } from '../../../context/ethereum/ethereumContext';
 
 const AuthWithEthereumContent = () => {
   const ethContext = useEthereumContext();

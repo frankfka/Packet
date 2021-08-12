@@ -1,5 +1,5 @@
 import React from 'react';
-import { useOrbitDb } from '../../context/orbitDb/orbitDbContext';
+import { useOrbitDb } from '../../../context/orbitDb/orbitDbContext';
 
 const HomePageOrbitDbSection = () => {
   const orbitDbContext = useOrbitDb();
