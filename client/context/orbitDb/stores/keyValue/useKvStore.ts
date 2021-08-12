@@ -4,7 +4,7 @@ import { useStoreCache } from '../storeCacheContext';
 import { GetKvStoreParams, KvStoreData, kvStoreLogger } from './kvStoreUtils';
 
 export type KvStoreState<TValueType> = {
-  // TODO: add initializing boolean
+  isLoadingStore: boolean;
   store?: KeyValueStore<TValueType>;
   storeData?: KvStoreData<TValueType>;
   reloadStoreData(): void;
@@ -17,21 +17,17 @@ export const useKvStore = <TValueType>(
 ): KvStoreState<TValueType> => {
   const storeCacheContext = useStoreCache();
 
+  const [isLoadingStore, setIsLoadingStore] = useState(false);
   const [kvStore, setKvStore] = useState<KeyValueStore<TValueType>>();
   const [kvStoreData, setKvStoreData] = useState<KvStoreData<TValueType>>({});
   const [storeInitError, setStoreInitError] = useState(false);
 
   // Resets state of the hook
   const resetState = () => {
+    setIsLoadingStore(false);
     setKvStoreData({});
     setKvStore(undefined);
     setStoreInitError(false);
-  };
-
-  // Completely deinitializes the store by removing listeners
-  const deinitStore = () => {
-    kvStore?.events.removeAllListeners();
-    resetState();
   };
 
   // Manually reloads all the data in the store
@@ -62,6 +58,7 @@ export const useKvStore = <TValueType>(
     const getStore = async () => {
       kvStoreLogger.debug('Getting store with params', params);
 
+      setIsLoadingStore(true);
       try {
         const store = await storeCacheContext.getKvStore<TValueType>(params);
 
@@ -77,6 +74,7 @@ export const useKvStore = <TValueType>(
 
         setStoreInitError(true);
       }
+      setIsLoadingStore(false);
     };
 
     getStore();
@@ -119,12 +117,14 @@ export const useKvStore = <TValueType>(
     });
 
     return () => {
-      kvStoreLogger.debug('Removing event listeners for store');
+      kvStoreLogger.debug('Cleaning up current KV store');
+      resetState();
       kvStore.events.removeAllListeners();
     };
   }, [kvStore]);
 
   const state: KvStoreState<TValueType> = {
+    isLoadingStore,
     store: kvStore,
     storeData: kvStoreData,
     reloadStoreData,
