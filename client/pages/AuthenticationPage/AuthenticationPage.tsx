@@ -2,18 +2,22 @@ import React, { useEffect, useState } from 'react';
 
 import Identities from 'orbit-db-identity-provider';
 import { ethers } from 'ethers';
-import { Ethereumish } from '../../context/ethereum/ethereumTypes';
+import { WindowEthereumProvider } from '../../context/ethereum/ethereumTypes';
 
 const AuthenticationPage = () => {
   const [accountsData, setAccountsData] = useState('');
 
-  const test = async (eth: Ethereumish) => {
+  const test = async (eth?: WindowEthereumProvider) => {
+    if (eth == null) {
+      return;
+    }
+
     // This is required to enable metamask
     await eth.enable();
 
     console.log('Ethereum enabled');
 
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const provider = new ethers.providers.Web3Provider(eth);
 
     const wallet = provider.getSigner();
 

@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { useOrbitDb } from '../orbitDbContext';
-import { getKvStore, KvStoreParams } from './kvStoreLifecycle';
+import { getKvStore, KvStoreParams } from './kvStoreUtils';
 
 type KvStoreContextData = {
   store?: KeyValueStore<unknown>;

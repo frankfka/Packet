@@ -1,9 +1,11 @@
 import OrbitDB from 'orbit-db';
+import AccessController from 'orbit-db-access-controllers/src/access-controller-interface';
 import KeyValueStore from 'orbit-db-kvstore';
 
 export type KvStoreParams = {
   address: string;
   create: boolean;
+  accessController?: AccessController;
 };
 
 export const getKvStore = async (
@@ -12,9 +14,7 @@ export const getKvStore = async (
 ): Promise<KeyValueStore<unknown>> => {
   const store = await db.kvstore(params.address, {
     create: params.create,
-    accessController: {
-      write: ['*'],
-    },
+    accessController: params.accessController,
   });
   await store.load();
 

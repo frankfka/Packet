@@ -1,26 +1,32 @@
 import KeyValueStore from 'orbit-db-kvstore';
 import React, { MouseEventHandler, useState } from 'react';
-import { useKvStore } from '../../context/orbitDb/kvStore/kvStoreContext';
-import { KvStoreParams } from '../../context/orbitDb/kvStore/kvStoreLifecycle';
-import { useOrbitDb } from '../../context/orbitDb/orbitDbContext';
+import {
+  GetKvStoreParams,
+  KvStoreData,
+} from '../../context/orbitDb/stores/keyValue/kvStoreUtils';
+import { useKvStore } from '../../context/orbitDb/stores/keyValue/useKvStore';
 
-const KvStorePicker: React.FC = () => {
-  const { setStoreParams } = useKvStore();
+const KvStorePicker: React.FC<{
+  setStoreParams(p: GetKvStoreParams): void;
+}> = ({ setStoreParams }) => {
   const [storeAddress, setStoreAddress] = useState('');
 
   const createStoreClicked: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
     setStoreParams({
-      address: 'test-kv-store',
-      create: true,
+      addressOrName: 'test-kv-store',
+      createParams: {
+        accessController: {
+          write: ['*'],
+        },
+      },
     });
   };
 
   const loadStoreClicked: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
     setStoreParams({
-      address: storeAddress,
-      create: false,
+      addressOrName: storeAddress,
     });
   };
 
@@ -42,10 +48,10 @@ const KvStorePicker: React.FC = () => {
 
 const KvStoreContent: React.FC<{
   store: KeyValueStore<unknown>;
-  storeData: Record<string, unknown>;
+  storeData: KvStoreData<unknown>;
   reloadStoreData(): void;
-  setStoreParams(params?: KvStoreParams): void;
-}> = ({ store, setStoreParams, storeData, reloadStoreData }) => {
+  unloadStore(): void;
+}> = ({ store, storeData, reloadStoreData, unloadStore }) => {
   const [key, setKey] = useState('');
   const [val, setVal] = useState('');
 
@@ -57,7 +63,7 @@ const KvStoreContent: React.FC<{
 
   const onUnloadStoreClicked: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
-    setStoreParams(undefined);
+    unloadStore();
   };
 
   const onReloadStoreDataClicked: MouseEventHandler<HTMLButtonElement> = async (
@@ -107,19 +113,27 @@ const KvStoreContent: React.FC<{
 };
 
 const HomePageKvStoreSection = () => {
-  const kvStoreContext = useKvStore();
+  const [storeParams, setStoreParams] = useState<GetKvStoreParams | undefined>({
+    addressOrName: 'test-orbitdb-kv',
+  });
+
+  const kvStore = useKvStore(storeParams);
+
+  const unloadStore = () => {
+    setStoreParams(undefined);
+  };
 
   return (
     <div>
       <h3>OrbitDB Info</h3>
-      {kvStoreContext.initError && <p>Initialization Error</p>}
-      {!kvStoreContext.store && <KvStorePicker />}
-      {kvStoreContext.store && (
+      {kvStore.initError && <p>Initialization Error</p>}
+      {!kvStore.store && <KvStorePicker setStoreParams={setStoreParams} />}
+      {kvStore.store && (
         <KvStoreContent
-          store={kvStoreContext.store}
-          storeData={kvStoreContext.storeData ?? {}}
-          setStoreParams={kvStoreContext.setStoreParams}
-          reloadStoreData={kvStoreContext.reloadStoreData}
+          store={kvStore.store}
+          storeData={kvStore.storeData ?? {}}
+          reloadStoreData={kvStore.reloadStoreData}
+          unloadStore={unloadStore}
         />
       )}
     </div>

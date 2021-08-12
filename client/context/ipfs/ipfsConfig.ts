@@ -1,4 +1,8 @@
-const ipfsConfig = {
+type IPFSConfig = {
+  // TODO: typing
+};
+
+const ipfsConfig: IPFSConfig = {
   start: true,
   relay: {
     enabled: false, // enable relay dialer/listener (STOP)
@@ -9,8 +13,7 @@ const ipfsConfig = {
   preload: {
     enabled: false,
   },
-  repo: './ipfs-orbitdb',
-  EXPERIMENTAL: { pubsub: true },
+  repo: './packet-ipfs',
   pubsub: true,
   config: {
     Addresses: {

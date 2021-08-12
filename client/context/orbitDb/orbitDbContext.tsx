@@ -1,16 +1,24 @@
 import OrbitDB from 'orbit-db';
+import { Identity } from 'orbit-db-identity-provider';
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import getLogger from '../../../util/getLogger';
 import { useIpfs } from '../ipfs/IpfsContext';
-import { createOrbitDbInstance } from './orbitDbLifecycle';
+import { createOrbitDbInstance } from './orbitDbUtils';
+
+const logger = getLogger('OrbitDB-Context');
 
 type OrbitDbContextData = {
+  setIdentity(identity?: Identity): void;
   orbitDb?: OrbitDB;
   initError?: boolean;
 };
 
-export const OrbitDbContext = createContext<OrbitDbContextData>({});
+export const OrbitDbContext = createContext<OrbitDbContextData>({
+  setIdentity() {},
+});
 
 export const OrbitDbContextProvider: React.FC = ({ children }) => {
+  const [identity, setIdentity] = useState<Identity>();
   const [orbitDb, setOrbitDb] = useState<OrbitDB>();
   const [initError, setInitError] = useState(false);
 
@@ -18,19 +26,40 @@ export const OrbitDbContextProvider: React.FC = ({ children }) => {
 
   // Create the DB when able
   useEffect(() => {
-    if (ipfs == null) {
-      return;
-    }
+    // Enable cancellation of existing operation
+    let cancelled = false;
 
-    createOrbitDbInstance(ipfs)
-      .then((db) => {
+    // Async function to create an OrbitDB instance
+    const createOrbitDb = async () => {
+      // Reset all state
+      setOrbitDb(undefined);
+      setInitError(false);
+
+      if (ipfs == null) {
+        return;
+      }
+
+      try {
+        const db = await createOrbitDbInstance(ipfs, identity);
+
+        // Abort if the request has been cancelled
+        if (cancelled) {
+          logger.debug('Existing request is cancelled, aborting.');
+          return;
+        }
+
+        logger.debug('Created OrbitDB instance', db);
         setOrbitDb(db);
-      })
-      .catch((err) => {
-        console.error('Error creating orbitDB', err);
+      } catch (err) {
+        logger.debug('Error creating OrbitDB', err);
+        if (cancelled) return;
         setInitError(true);
-      });
-  }, [ipfs]);
+      }
+    };
+
+    // Call the async fn
+    createOrbitDb();
+  }, [ipfs, identity]);
 
   // Debug logging
   useEffect(() => {
@@ -39,7 +68,7 @@ export const OrbitDbContextProvider: React.FC = ({ children }) => {
         return;
       }
 
-      console.debug('[OrbitDB] Instance:', orbitDb);
+      logger.debug('Instance:', orbitDb);
     };
 
     const interval = setInterval(debugLog, 30000);
@@ -48,9 +77,11 @@ export const OrbitDbContextProvider: React.FC = ({ children }) => {
     return () => clearInterval(interval);
   }, [orbitDb]);
 
+  // Create context data
   const contextData: OrbitDbContextData = {
     orbitDb,
     initError: initError || ipfsInitError,
+    setIdentity,
   };
 
   return (

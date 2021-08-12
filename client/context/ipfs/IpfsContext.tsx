@@ -1,8 +1,10 @@
-import debug from 'debug';
 import React, { useContext } from 'react';
 import { IPFS } from 'ipfs-core-types';
 import { createContext, useEffect, useState } from 'react';
-import { createIpfs, stopIpfs } from './ipfsLifecycle';
+import getLogger from '../../../util/getLogger';
+import { createIpfs, stopIpfs } from './ipfsUtils';
+
+const logger = getLogger('IPFS-Context');
 
 type IpfsContextData = {
   ipfs?: IPFS;
@@ -17,18 +19,36 @@ export const IpfsContextProvider: React.FC = ({ children }) => {
 
   // Create IPFS instance on load
   useEffect(() => {
-    if (ipfs) {
-      return;
-    }
+    let cancelled = false;
 
-    createIpfs()
-      .then((instance) => setIpfs(instance))
-      .catch((err) => {
-        console.error('Error creating IPFS instance', err);
+    const createIpfsInstance = async () => {
+      if (ipfs) {
+        return;
+      }
+
+      // Reset
+      setInitError(false);
+      setIpfs(undefined);
+
+      try {
+        const instance = await createIpfs();
+        if (cancelled) return;
+
+        logger.debug('Created IPFS instance', instance);
+        setIpfs(instance);
+      } catch (err) {
+        logger.debug('Error creating IPFS instance', err);
+        if (cancelled) return;
         setInitError(true);
-      });
+      }
+    };
 
-    return () => ipfs && stopIpfs(ipfs);
+    createIpfsInstance();
+
+    return () => {
+      ipfs && stopIpfs(ipfs);
+      cancelled = true;
+    };
   }, [ipfs]);
 
   // Debug logging
@@ -41,9 +61,9 @@ export const IpfsContextProvider: React.FC = ({ children }) => {
       const peers = await ipfs.swarm.peers();
       const currentNode = await ipfs.id();
 
-      console.debug('[IPFS] Number of peers:', peers.length);
-      console.debug('[IPFS] Current node ID:', currentNode.id);
-      console.debug('[IPFS] Current node addresses:', currentNode.addresses);
+      logger.debug('Number of peers:', peers.length);
+      logger.debug('Current node ID:', currentNode.id);
+      logger.debug('Current node addresses:', currentNode.addresses);
     };
 
     const interval = setInterval(debugLog, 30000);
