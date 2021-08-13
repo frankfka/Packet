@@ -1,11 +1,8 @@
 import OrbitDB from 'orbit-db';
 import KeyValueStore from 'orbit-db-kvstore';
-import getLogger from '../../../../../util/getLogger';
-import { GetStoreParams } from '../orbitDbStoreUtils';
+import { GetStoreParams } from './orbitDbStoreUtils';
 
-export type KvStoreData<TValueType> = Record<string, TValueType>;
-
-export const kvStoreLogger = getLogger('KVStore');
+export type OrbitKvStoreData<TValueType> = Record<string, TValueType>;
 
 export type GetKvStoreParams = GetStoreParams;
 

@@ -20,12 +20,14 @@ const logger = getLogger('Ethereum-Context');
 // that user needs to grant access to accounts
 type EthereumContextData = {
   providerAvailable?: boolean; // Whether the user has a window.ethereum instance
-  init(): void; // Attempts to initialize the current signer
+  init(): Promise<JsonRpcSigner | undefined>; // Attempts to initialize the current signer, returning a signer address if possible
   currentSigner?: JsonRpcSigner; // A VALID signer guaranteed to have an address
 };
 
 export const EthereumContext = createContext<EthereumContextData>({
-  init() {},
+  async init() {
+    return undefined;
+  },
 });
 
 export const EthereumContextProvider: React.FC = ({ children }) => {
@@ -33,11 +35,11 @@ export const EthereumContextProvider: React.FC = ({ children }) => {
   const [ethersProvider, setEthersProvider] = useState<Web3Provider>();
   const [currentSigner, setCurrentSigner] = useState<EthereumSigner>();
 
-  // Updates current signer in response to events
+  // Updates current signer in response to events and returns valid signer if able
   const updateSigner = async (
     provider: Web3Provider,
     addresses?: unknown[]
-  ) => {
+  ): Promise<JsonRpcSigner | undefined> => {
     setCurrentSigner(undefined);
     logger.debug('Updating signer');
 
@@ -58,6 +60,8 @@ export const EthereumContextProvider: React.FC = ({ children }) => {
       logger.debug('Signer retrieved with address', address);
 
       setCurrentSigner(signer);
+
+      return signer;
     } catch (err) {
       logger.error('No address for current signer', err);
     }
@@ -83,8 +87,8 @@ export const EthereumContextProvider: React.FC = ({ children }) => {
     };
   }, [ethersProvider]);
 
-  // Init function
-  const init = useCallback(async () => {
+  // Init function - returns the initialized signer address
+  const init = useCallback(async (): Promise<JsonRpcSigner | undefined> => {
     setCurrentSigner(undefined);
 
     if (window.ethereum == null) return;
@@ -102,7 +106,7 @@ export const EthereumContextProvider: React.FC = ({ children }) => {
       setEthersProvider(provider);
 
       // Update current signer
-      updateSigner(provider);
+      return updateSigner(provider);
     } catch (err) {
       logger.error('Error requesting accounts', err);
     }

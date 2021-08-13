@@ -3,11 +3,12 @@ import { Identity } from 'orbit-db-identity-provider';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import getLogger from '../../../util/getLogger';
 import { useIpfs } from '../ipfs/IpfsContext';
-import { createOrbitDbInstance } from './orbitDbUtils';
+import { createOrbitDbInstance } from '../../util/orbitDb/orbitDbUtils';
 
 const logger = getLogger('OrbitDB-Context');
 
 type OrbitDbContextData = {
+  identity?: Identity;
   setIdentity(identity?: Identity): void;
   orbitDb?: OrbitDB;
   initError?: boolean;
@@ -69,6 +70,8 @@ export const OrbitDbContextProvider: React.FC = ({ children }) => {
       }
 
       logger.debug('Instance:', orbitDb);
+      // @ts-ignore
+      logger.debug('Current identity ID', orbitDb.identity._id);
     };
 
     const interval = setInterval(debugLog, 30000);
@@ -81,6 +84,7 @@ export const OrbitDbContextProvider: React.FC = ({ children }) => {
   const contextData: OrbitDbContextData = {
     orbitDb,
     initError: initError || ipfsInitError,
+    identity,
     setIdentity,
   };
 

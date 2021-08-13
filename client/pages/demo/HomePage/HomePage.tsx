@@ -4,7 +4,7 @@ import {
   useIpfs,
 } from '../../../context/ipfs/IpfsContext';
 import { OrbitDbContextProvider } from '../../../context/orbitDb/orbitDbContext';
-import { StoreCacheContextProvider } from '../../../context/orbitDb/stores/storeCacheContext';
+import { StoreCacheContextProvider } from '../../../context/orbitDb/storeCacheContext';
 import HomePageIpfsSection from './HomePageIpfsSection';
 import HomePageKvStoreSection from './HomePageKvStoreSection';
 import HomePageOrbitDbSection from './HomePageOrbitDbSection';

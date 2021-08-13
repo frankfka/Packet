@@ -2,9 +2,9 @@ import KeyValueStore from 'orbit-db-kvstore';
 import React, { MouseEventHandler, useState } from 'react';
 import {
   GetKvStoreParams,
-  KvStoreData,
-} from '../../../context/orbitDb/stores/keyValue/kvStoreUtils';
-import { useKvStore } from '../../../context/orbitDb/stores/keyValue/useKvStore';
+  OrbitKvStoreData,
+} from '../../../util/orbitDb/orbitDbKvStoreUtils';
+import { useKvStore } from '../../../context/orbitDb/kvStore/useKvStore';
 
 const KvStorePicker: React.FC<{
   setStoreParams(p: GetKvStoreParams): void;
@@ -48,7 +48,7 @@ const KvStorePicker: React.FC<{
 
 const KvStoreContent: React.FC<{
   store: KeyValueStore<unknown>;
-  storeData: KvStoreData<unknown>;
+  storeData: OrbitKvStoreData<unknown>;
   reloadStoreData(): void;
   unloadStore(): void;
 }> = ({ store, storeData, reloadStoreData, unloadStore }) => {

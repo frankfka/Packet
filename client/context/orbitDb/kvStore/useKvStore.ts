@@ -1,38 +1,47 @@
 import KeyValueStore from 'orbit-db-kvstore';
 import { useEffect, useState } from 'react';
+import getLogger from '../../../../util/getLogger';
 import { useStoreCache } from '../storeCacheContext';
-import { GetKvStoreParams, KvStoreData, kvStoreLogger } from './kvStoreUtils';
+import {
+  GetKvStoreParams,
+  OrbitKvStoreData,
+} from '../../../util/orbitDb/orbitDbKvStoreUtils';
 
-export type KvStoreState<TValueType> = {
+export const logger = getLogger('UseKvStore');
+
+// Exposes KNOWN kv data types
+export type KvStoreData<TData> = TData & OrbitKvStoreData<unknown>;
+
+export type KvStoreState<TData> = {
   isLoadingStore: boolean;
-  store?: KeyValueStore<TValueType>;
-  storeData?: KvStoreData<TValueType>;
+  store?: KeyValueStore<unknown>;
+  storeData?: KvStoreData<TData>;
   reloadStoreData(): void;
   initError?: boolean;
 };
 
-export const useKvStore = <TValueType>(
+export const useKvStore = <TData>(
   // Optional params so that we don't need to create the store when creating the hook
   params?: GetKvStoreParams
-): KvStoreState<TValueType> => {
+): KvStoreState<TData> => {
   const storeCacheContext = useStoreCache();
 
   const [isLoadingStore, setIsLoadingStore] = useState(false);
-  const [kvStore, setKvStore] = useState<KeyValueStore<TValueType>>();
-  const [kvStoreData, setKvStoreData] = useState<KvStoreData<TValueType>>({});
+  const [kvStore, setKvStore] = useState<KeyValueStore<unknown>>();
+  const [kvStoreData, setKvStoreData] = useState<KvStoreData<TData>>();
   const [storeInitError, setStoreInitError] = useState(false);
 
   // Resets state of the hook
   const resetState = () => {
     setIsLoadingStore(false);
-    setKvStoreData({});
+    setKvStoreData(undefined);
     setKvStore(undefined);
     setStoreInitError(false);
   };
 
   // Manually reloads all the data in the store
   const reloadStoreData = async () => {
-    kvStoreLogger.debug('Reloading store data');
+    logger.debug('Reloading store data');
 
     if (kvStore) {
       await kvStore.load();
@@ -42,7 +51,7 @@ export const useKvStore = <TValueType>(
       // @ts-ignore - Ignore to disable typechecking of store types
       setKvStoreData({ ...kvStore.all });
     } else {
-      setKvStoreData({});
+      setKvStoreData(undefined);
     }
   };
 
@@ -56,19 +65,19 @@ export const useKvStore = <TValueType>(
     let cancelled = false;
 
     const getStore = async () => {
-      kvStoreLogger.debug('Getting store with params', params);
+      logger.debug('Getting store with params', params);
 
       setIsLoadingStore(true);
       try {
-        const store = await storeCacheContext.getKvStore<TValueType>(params);
+        const store = await storeCacheContext.getKvStore<unknown>(params);
 
         if (cancelled) return;
 
-        kvStoreLogger.debug('Retrieved KV store', store);
+        logger.debug('Retrieved KV store', store);
 
         setKvStore(store);
       } catch (err) {
-        kvStoreLogger.error('Error getting KV store', err);
+        logger.error('Error getting KV store', err);
 
         if (cancelled) return;
 
@@ -84,46 +93,41 @@ export const useKvStore = <TValueType>(
   useEffect(() => {
     if (kvStore == null) return;
 
-    kvStoreLogger.debug('Listening to events');
+    logger.debug('Listening to events');
 
     // Load store data on init
     reloadStoreData();
 
     // Occurs when replication is in-progress
     kvStore.events.on('replicate', (address) => {
-      kvStoreLogger.debug('db.events.replicate', address.toString());
+      logger.debug('db.events.replicate', address.toString());
     });
 
     // Occurs when replication is done
     kvStore.events.on('replicated', (address) => {
-      kvStoreLogger.debug('db.events.replicated', address.toString());
+      logger.debug('db.events.replicated', address.toString());
       reloadStoreData();
     });
 
     // Occurs when a new operation is executed
     kvStore.events.on('write', (address, entry) => {
-      kvStoreLogger.debug(
-        'db.events.write',
-        address.toString(),
-        'Entry',
-        entry
-      );
+      logger.debug('db.events.write', address.toString(), 'Entry', entry);
       reloadStoreData();
     });
 
     // Occurs when a peer connects
     kvStore.events.on('peer', (peer) => {
-      kvStoreLogger.debug('db.events.peer', peer);
+      logger.debug('db.events.peer', peer);
     });
 
     return () => {
-      kvStoreLogger.debug('Cleaning up current KV store');
+      logger.debug('Cleaning up current KV store');
       resetState();
       kvStore.events.removeAllListeners();
     };
   }, [kvStore]);
 
-  const state: KvStoreState<TValueType> = {
+  const state: KvStoreState<TData> = {
     isLoadingStore,
     store: kvStore,
     storeData: kvStoreData,
