@@ -4,6 +4,7 @@ import {
   getCurrentUserIdFromLocalStorage,
   setCurrentUserIdFromLocalStorage,
 } from '../../util/localStorage/currentUser';
+import FeedKvStoreData from '../../util/orbitDb/feed/FeedKvStoreData';
 import UserKvStoreData from '../../util/orbitDb/user/UserKvStoreData';
 import { useEthereumContext } from '../ethereum/ethereumContext';
 import { useOrbitDb } from '../orbitDb/orbitDbContext';
@@ -12,6 +13,7 @@ import useRegistryUser from '../../hooks/useRegistryUser';
 
 const logger = getLogger('RegistryApp-Context');
 
+// TODO: Test this!
 type RegistryAppContextData = {
   isReady: boolean; // Whether we have processed logic for initial render
   // User functions
@@ -21,8 +23,15 @@ type RegistryAppContextData = {
   userId?: string;
   loadingUserData: boolean;
   userData?: UserKvStoreData;
+  isOrbitIdentityInitialized: boolean;
+  requestOrbitIdentity(): Promise<void>;
   // Feed functions
-
+  // User Feeds State
+  isLoadingUserFeeds: boolean;
+  loadedUserFeeds: Record<string, FeedKvStoreData>;
+  // Exposed functions
+  createUserFeed(name: string, iconUri?: string): Promise<void>;
+  deleteUserFeed(address: string): Promise<void>;
   // Feed state
   // userFeeds: FeedKvStoreData[]
   // createNewFeed(metadata: FeedMetadataKvStoreData): Promise<string> // Resolves to OrbitDB address of the feed
@@ -36,6 +45,12 @@ export const RegistryAppContext = createContext<RegistryAppContextData>({
   async login() {},
   async logout() {},
   loadingUserData: false,
+  isOrbitIdentityInitialized: false,
+  async requestOrbitIdentity() {},
+  isLoadingUserFeeds: false,
+  loadedUserFeeds: {},
+  async createUserFeed() {},
+  async deleteUserFeed() {},
 });
 
 /*
@@ -103,6 +118,23 @@ export const RegistryAppContextProvider: React.FC = ({ children }) => {
     registryUserState.setUserId(undefined);
   };
 
+  // Function to request orbit identity (TODO: DRY)
+  const requestOrbitIdentity = async () => {
+    // TODO: init with requested address?
+    const currentSigner = await ethereumContext.init();
+    if (currentSigner == null) {
+      logger.warn(
+        'No signer resulted from initializing ethereum, aborting sign in'
+      );
+      return;
+    }
+
+    // Update orbit context
+    logger.debug('Creating and setting orbitDB identity');
+    const orbitIdentity = await createEthereumOrbitDbIdentity(currentSigner);
+    orbitDbContext.setIdentity(orbitIdentity);
+  };
+
   // Create context data
   const contextData: RegistryAppContextData = {
     // User
@@ -112,7 +144,15 @@ export const RegistryAppContextProvider: React.FC = ({ children }) => {
     userId: registryUserState.userId,
     login,
     logout,
+    isOrbitIdentityInitialized:
+      orbitDbContext.identity?.id != null &&
+      orbitDbContext.identity.id !== registryUserState.userId,
+    requestOrbitIdentity,
     // Feed
+    isLoadingUserFeeds: registryUserState.isLoadingUserFeeds,
+    loadedUserFeeds: registryUserState.loadedUserFeeds,
+    createUserFeed: registryUserState.createUserFeed,
+    deleteUserFeed: registryUserState.deleteUserFeed,
   };
 
   return (

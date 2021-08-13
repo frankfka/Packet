@@ -8,6 +8,9 @@ import {
   setStoreAddressForUser,
 } from '../util/localStorage/userDbAddress';
 import FeedKvStoreData from '../util/orbitDb/feed/FeedKvStoreData';
+import initFeedKvStoreData from '../util/orbitDb/feed/initFeedKvStoreData';
+import addFeedToUserData from '../util/orbitDb/user/addFeedToUserData';
+import deleteFeedFromUserData from '../util/orbitDb/user/deleteFeedFromUserData';
 import initUserStoreData from '../util/orbitDb/user/initUserStoreData';
 import isUserStoreInitialized from '../util/orbitDb/user/isUserStoreInitialized';
 import UserKvStoreData from '../util/orbitDb/user/UserKvStoreData';
@@ -140,6 +143,8 @@ const useRegistryUser = (): UseRegistryUserState => {
 
       if (userKvStoreState.isLoadingStore || storeCacheContext == null) return;
 
+      logger.debug('Loading user feed stores');
+
       // Begin loading
       setIsLoadingUserFeeds(true);
 
@@ -165,6 +170,11 @@ const useRegistryUser = (): UseRegistryUserState => {
 
         inProgressUserFeeds[feedKvStoreAddress] = store;
       }
+
+      logger.debug(
+        'Loaded user feeds with length',
+        Object.keys(inProgressUserFeeds).length
+      );
 
       if (!cancelled) {
         setLoadedUserFeedStores(inProgressUserFeeds);
@@ -194,7 +204,101 @@ const useRegistryUser = (): UseRegistryUserState => {
     }
   );
 
-  // Functions to create and delete user feeds (TODO)
+  // Functions to create and delete user feeds
+  const createUserFeed = async (name: string, iconUri?: string) => {
+    // Check identity as we're executing a write op
+    if (
+      userId == null ||
+      orbitDbContext.identity == null ||
+      userId !== orbitDbContext.identity.id
+    ) {
+      logger.error('Required identity is not initialized, aborting');
+      return;
+    }
+
+    if (storeCacheContext == null) {
+      logger.error('No store cache context, aborting');
+      return;
+    }
+
+    if (userKvStoreState.store == null) {
+      logger.error('No user KV store exists, aborting');
+      return;
+    }
+
+    // Create the posts feed store
+    const newPostsFeedStore = await storeCacheContext.getFeedStore({
+      addressOrName: userId + '/feeds/' + name + '/posts',
+      createParams: {
+        accessController: {
+          write: [userId],
+        },
+      },
+    });
+
+    const postsFeedStoreAddress = newPostsFeedStore.address.toString();
+    logger.debug(
+      'Created OrbitDB Feed Store for posts with address',
+      postsFeedStoreAddress
+    );
+
+    // Now create the root feed KV store
+    const feedKvStoreData: FeedKvStoreData = {
+      name,
+      iconUri,
+      postsDbAddress: postsFeedStoreAddress,
+    };
+
+    const newFeedkvStore = await storeCacheContext.getKvStore({
+      addressOrName: userId + '/feeds/' + name,
+      createParams: {
+        accessController: {
+          write: [userId],
+        },
+      },
+    });
+    await initFeedKvStoreData(newFeedkvStore, feedKvStoreData);
+    const feedKvStoreAddress = newFeedkvStore.address.toString();
+
+    logger.debug(
+      'Created root KV store for feed with address',
+      feedKvStoreAddress
+    );
+
+    await addFeedToUserData(userKvStoreState.store, feedKvStoreAddress);
+  };
+
+  const deleteUserFeed = async (address: string) => {
+    // Check identity as we're executing a write op
+    if (
+      userId == null ||
+      orbitDbContext.identity == null ||
+      userId !== orbitDbContext.identity.id
+    ) {
+      logger.error('Required identity is not initialized, aborting');
+      return;
+    }
+
+    if (userKvStoreState.store == null) {
+      logger.error('No user KV store exists, aborting');
+      return;
+    }
+
+    const feedStore = loadedUserFeedStores[address];
+
+    if (feedStore == null) {
+      logger.warn("Attempting to delete a feed that doesn't exist", address);
+      return;
+    }
+
+    // Delete all local data
+    await feedStore.drop();
+    // Delete from cache
+    storeCacheContext?.removeFeedStore(address);
+
+    // Remove from user data
+    await deleteFeedFromUserData(userKvStoreState.store, address);
+  };
 
   const hookData: UseRegistryUserState = {
     // User State
@@ -206,9 +310,7 @@ const useRegistryUser = (): UseRegistryUserState => {
     // User Feeds State
     isLoadingUserFeeds,
     loadedUserFeeds,
-    createUserFeed(name: string, iconUri?: string): Promise<void> {
-      return Promise.resolve(undefined);
-    },
+    createUserFeed,
     deleteUserFeed(address: string): Promise<void> {
       return Promise.resolve(undefined);
     },

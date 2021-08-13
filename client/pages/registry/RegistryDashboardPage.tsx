@@ -49,6 +49,10 @@ export const NoConnectedAccountContent: React.FC<NoConnectedAccountContentProps>
     );
   };
 
+function getRandomInt(max: number): string {
+  return Math.floor(Math.random() * max).toFixed(0);
+}
+
 const RegistryDashboardPage = () => {
   const registryAppContext = useRegistryApp();
   const { providerAvailable } = useEthereumContext();
@@ -70,10 +74,27 @@ const RegistryDashboardPage = () => {
     <AppPage>
       {/*Publications*/}
       <Typography variant="h3">Manage Publications</Typography>
+      {/*Request for auth*/}
       <Paper>{authInfoContent}</Paper>
       <Paper>
+        <Button
+          onClick={() => {
+            registryAppContext.createUserFeed(
+              'TestUserFeed' + getRandomInt(100)
+            );
+          }}
+        >
+          Test!
+        </Button>
+        <Button onClick={() => registryAppContext.requestOrbitIdentity()}>
+          Request Orbit ID
+        </Button>
+      </Paper>
+
+      {/*Debug*/}
+      <Paper>
         <h4>Registry App Context Data:</h4>
-        {JSON.stringify(registryAppContext)}
+        <pre>{JSON.stringify(registryAppContext, null, 2)}</pre>
       </Paper>
     </AppPage>
   );

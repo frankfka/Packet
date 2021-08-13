@@ -40,19 +40,23 @@ export const useKvStore = <TData>(
   };
 
   // Manually reloads all the data in the store
-  const reloadStoreData = async () => {
+  const reloadStoreDataForStore = async (store?: KeyValueStore<unknown>) => {
     logger.debug('Reloading store data');
 
-    if (kvStore) {
-      await kvStore.load();
+    if (store) {
+      await store.load();
 
       // Use spread operator to create a new object as `kvStore.all`
       // is the same reference between loads
       // @ts-ignore - Ignore to disable typechecking of store types
-      setKvStoreData({ ...kvStore.all });
+      setKvStoreData({ ...store.all });
     } else {
       setKvStoreData(undefined);
     }
+  };
+
+  const reloadStoreData = async () => {
+    reloadStoreDataForStore(kvStore);
   };
 
   // Create the KV store
@@ -93,37 +97,38 @@ export const useKvStore = <TData>(
   useEffect(() => {
     if (kvStore == null) return;
 
+    let storeRef = kvStore;
+
     logger.debug('Listening to events');
 
     // Load store data on init
-    reloadStoreData();
+    reloadStoreDataForStore(storeRef);
 
     // Occurs when replication is in-progress
-    kvStore.events.on('replicate', (address) => {
+    storeRef.events.on('replicate', (address) => {
       logger.debug('db.events.replicate', address.toString());
     });
 
     // Occurs when replication is done
-    kvStore.events.on('replicated', (address) => {
+    storeRef.events.on('replicated', (address) => {
       logger.debug('db.events.replicated', address.toString());
-      reloadStoreData();
+      reloadStoreDataForStore(storeRef);
     });
 
     // Occurs when a new operation is executed
-    kvStore.events.on('write', (address, entry) => {
+    storeRef.events.on('write', (address, entry) => {
       logger.debug('db.events.write', address.toString(), 'Entry', entry);
-      reloadStoreData();
+      reloadStoreDataForStore(storeRef);
     });
 
     // Occurs when a peer connects
-    kvStore.events.on('peer', (peer) => {
+    storeRef.events.on('peer', (peer) => {
       logger.debug('db.events.peer', peer);
     });
 
     return () => {
-      logger.debug('Cleaning up current KV store');
-      resetState();
-      kvStore.events.removeAllListeners();
+      logger.debug('Cleaning up current KV store listeners');
+      storeRef.events.removeAllListeners();
     };
   }, [kvStore]);
 
