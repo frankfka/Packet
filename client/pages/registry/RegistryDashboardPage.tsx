@@ -5,6 +5,7 @@ import AppPage from '../../components/AppPage/AppPage';
 import { useEthereumContext } from '../../context/ethereum/ethereumContext';
 import { useRegistryApp } from '../../context/registryApp/registryAppContext';
 import CreateNewFeedDialog from './CreateNewFeedDialog/CreateNewFeedDialog';
+import RegistryFeedList from './RegistryFeedList/RegistryFeedList';
 import {
   NoConnectedAccountContent,
   NoUserFeedsContent,
@@ -51,7 +52,9 @@ const RegistryDashboardPage = () => {
       Object.keys(registryAppContext.loadedUserFeeds).length > 0;
     // Can render publications
     if (userHasFeeds) {
-      // TODO
+      publicationsContent = (
+        <RegistryFeedList feeds={registryAppContext.loadedUserFeeds} />
+      );
     } else {
       publicationsContent = (
         <NoUserFeedsContent onCreateFeedClicked={onCreateFeedClicked} />
@@ -70,7 +73,9 @@ const RegistryDashboardPage = () => {
       {/*Publications*/}
       <Grid container alignItems="center" justifyContent="space-between">
         <Grid item>
-          <Typography variant="h3">Manage Feeds</Typography>
+          <Typography variant="h3" paragraph>
+            Manage Feeds
+          </Typography>
         </Grid>
         <Grid item>
           <Button
@@ -94,10 +99,10 @@ const RegistryDashboardPage = () => {
       </Paper>
 
       {/*Debug*/}
-      <Paper>
-        <h4>Registry App Context Data:</h4>
-        <pre>{JSON.stringify(registryAppContext, null, 2)}</pre>
-      </Paper>
+      {/*<Paper>*/}
+      {/*  <h4>Registry App Context Data:</h4>*/}
+      {/*  <pre>{JSON.stringify(registryAppContext, null, 2)}</pre>*/}
+      {/*</Paper>*/}
     </AppPage>
   );
 };
