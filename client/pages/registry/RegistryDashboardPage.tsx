@@ -1,65 +1,30 @@
-import { Button, Paper, Typography } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import { Button, Grid, Paper, Typography } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+import React, { useState } from 'react';
 import AppPage from '../../components/AppPage/AppPage';
-import CenteredInfoContainer from '../../components/CenteredInfoContainer/CenteredInfoContainer';
 import { useEthereumContext } from '../../context/ethereum/ethereumContext';
 import { useRegistryApp } from '../../context/registryApp/registryAppContext';
-
-export const NoWeb3ProviderContent: React.FC = () => {
-  return (
-    <CenteredInfoContainer>
-      <Typography variant="h4" paragraph>
-        No Web3 Wallet Detected
-      </Typography>
-      <Button
-        href="https://metamask.io/"
-        target="_blank"
-        variant="contained"
-        size="large"
-        color="secondary"
-      >
-        Get MetaMask
-      </Button>
-    </CenteredInfoContainer>
-  );
-};
-
-type NoConnectedAccountContentProps = {
-  onConnectAccountClicked(): void;
-};
-export const NoConnectedAccountContent: React.FC<NoConnectedAccountContentProps> =
-  ({ onConnectAccountClicked }) => {
-    return (
-      <CenteredInfoContainer>
-        <Typography variant="h4" paragraph>
-          No Account Connected
-        </Typography>
-        <Typography variant="subtitle1" paragraph>
-          Get started by connecting your Ethereum wallet.
-        </Typography>
-        <Button
-          onClick={onConnectAccountClicked}
-          variant="contained"
-          size="large"
-          color="secondary"
-        >
-          Connect
-        </Button>
-      </CenteredInfoContainer>
-    );
-  };
+import CreateNewFeedDialog from './CreateNewFeedDialog/CreateNewFeedDialog';
+import {
+  NoConnectedAccountContent,
+  NoUserFeedsContent,
+  NoWeb3ProviderContent,
+} from './RegistryInfoContent';
 
 function getRandomInt(max: number): string {
   return Math.floor(Math.random() * max).toFixed(0);
 }
 
 const RegistryDashboardPage = () => {
+  // Context
   const registryAppContext = useRegistryApp();
   const { providerAvailable } = useEthereumContext();
 
-  let authInfoContent: React.ReactElement | undefined = undefined;
+  // Create feed state
+  const [showCreateFeedDialog, setShowCreateFeedDialog] = useState(false);
 
   // Render the appropriate content depending on the authentication state
+  let authInfoContent: React.ReactElement | undefined = undefined;
   if (!providerAvailable) {
     authInfoContent = <NoWeb3ProviderContent />;
   } else if (registryAppContext.isReady && !registryAppContext.userId) {
@@ -70,25 +35,62 @@ const RegistryDashboardPage = () => {
     );
   }
 
+  const enableFeedInteraction =
+    !!registryAppContext.userId && !registryAppContext.isLoadingUserFeeds;
+
+  const onCreateFeedClicked = () => {
+    if (!enableFeedInteraction) return;
+
+    setShowCreateFeedDialog(true);
+  };
+
+  // Render the appropriate content for publications
+  let publicationsContent: React.ReactElement | undefined = undefined;
+  if (enableFeedInteraction) {
+    const userHasFeeds =
+      Object.keys(registryAppContext.loadedUserFeeds).length > 0;
+    // Can render publications
+    if (userHasFeeds) {
+      // TODO
+    } else {
+      publicationsContent = (
+        <NoUserFeedsContent onCreateFeedClicked={onCreateFeedClicked} />
+      );
+    }
+  }
+
   return (
     <AppPage>
+      {/*Create dialog*/}
+      <CreateNewFeedDialog
+        isOpen={showCreateFeedDialog}
+        setIsOpen={setShowCreateFeedDialog}
+      />
+
       {/*Publications*/}
-      <Typography variant="h3">Manage Publications</Typography>
-      {/*Request for auth*/}
-      <Paper>{authInfoContent}</Paper>
+      <Grid container alignItems="center" justifyContent="space-between">
+        <Grid item>
+          <Typography variant="h3">Manage Feeds</Typography>
+        </Grid>
+        <Grid item>
+          <Button
+            disabled={!enableFeedInteraction}
+            onClick={onCreateFeedClicked}
+            color="secondary"
+            startIcon={<AddIcon />}
+            variant="outlined"
+            size="large"
+          >
+            New
+          </Button>
+        </Grid>
+      </Grid>
+
       <Paper>
-        <Button
-          onClick={() => {
-            registryAppContext.createUserFeed(
-              'TestUserFeed' + getRandomInt(100)
-            );
-          }}
-        >
-          Test!
-        </Button>
-        <Button onClick={() => registryAppContext.requestOrbitIdentity()}>
-          Request Orbit ID
-        </Button>
+        {/*Request for auth*/}
+        {authInfoContent}
+        {/*Publications*/}
+        {publicationsContent}
       </Paper>
 
       {/*Debug*/}

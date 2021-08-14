@@ -1,15 +1,15 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import getLogger from '../../../util/getLogger';
+import useRegistryUser from '../../hooks/useRegistryUser';
 import {
   getCurrentUserIdFromLocalStorage,
   setCurrentUserIdFromLocalStorage,
 } from '../../util/localStorage/currentUser';
 import FeedKvStoreData from '../../util/orbitDb/feed/FeedKvStoreData';
+import { createEthereumOrbitDbIdentity } from '../../util/orbitDb/orbitDbUtils';
 import UserKvStoreData from '../../util/orbitDb/user/UserKvStoreData';
 import { useEthereumContext } from '../ethereum/ethereumContext';
 import { useOrbitDb } from '../orbitDb/orbitDbContext';
-import { createEthereumOrbitDbIdentity } from '../../util/orbitDb/orbitDbUtils';
-import useRegistryUser from '../../hooks/useRegistryUser';
 
 const logger = getLogger('RegistryApp-Context');
 
@@ -30,7 +30,7 @@ type RegistryAppContextData = {
   isLoadingUserFeeds: boolean;
   loadedUserFeeds: Record<string, FeedKvStoreData>;
   // Exposed functions
-  createUserFeed(name: string, iconUri?: string): Promise<void>;
+  createUserFeed(name: string, iconUri?: string): Promise<string | undefined>;
   deleteUserFeed(address: string): Promise<void>;
   // Feed state
   // userFeeds: FeedKvStoreData[]
@@ -49,7 +49,9 @@ export const RegistryAppContext = createContext<RegistryAppContextData>({
   async requestOrbitIdentity() {},
   isLoadingUserFeeds: false,
   loadedUserFeeds: {},
-  async createUserFeed() {},
+  async createUserFeed() {
+    return undefined;
+  },
   async deleteUserFeed() {},
 });
 
@@ -146,7 +148,7 @@ export const RegistryAppContextProvider: React.FC = ({ children }) => {
     logout,
     isOrbitIdentityInitialized:
       orbitDbContext.identity?.id != null &&
-      orbitDbContext.identity.id !== registryUserState.userId,
+      orbitDbContext.identity.id === registryUserState.userId,
     requestOrbitIdentity,
     // Feed
     isLoadingUserFeeds: registryUserState.isLoadingUserFeeds,

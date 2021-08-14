@@ -1,7 +1,9 @@
-import KeyValueStore from 'orbit-db-kvstore';
-import React, { useEffect, useState } from 'react';
 import { mapValues } from 'lodash';
+import KeyValueStore from 'orbit-db-kvstore';
+import { useEffect, useState } from 'react';
 import getLogger from '../../util/getLogger';
+import { useKvStore } from '../context/orbitDb/kvStore/useKvStore';
+import { useOrbitDb } from '../context/orbitDb/orbitDbContext';
 import { useStoreCache } from '../context/orbitDb/storeCacheContext';
 import {
   getStoreAddressForUser,
@@ -9,14 +11,12 @@ import {
 } from '../util/localStorage/userDbAddress';
 import FeedKvStoreData from '../util/orbitDb/feed/FeedKvStoreData';
 import initFeedKvStoreData from '../util/orbitDb/feed/initFeedKvStoreData';
+import { GetKvStoreParams } from '../util/orbitDb/orbitDbKvStoreUtils';
 import addFeedToUserData from '../util/orbitDb/user/addFeedToUserData';
 import deleteFeedFromUserData from '../util/orbitDb/user/deleteFeedFromUserData';
 import initUserStoreData from '../util/orbitDb/user/initUserStoreData';
 import isUserStoreInitialized from '../util/orbitDb/user/isUserStoreInitialized';
 import UserKvStoreData from '../util/orbitDb/user/UserKvStoreData';
-import { useOrbitDb } from '../context/orbitDb/orbitDbContext';
-import { GetKvStoreParams } from '../util/orbitDb/orbitDbKvStoreUtils';
-import { useKvStore } from '../context/orbitDb/kvStore/useKvStore';
 
 const logger = getLogger('UseRegistryUser');
 
@@ -31,7 +31,7 @@ export type UseRegistryUserState = {
   isLoadingUserFeeds: boolean;
   loadedUserFeeds: Record<string, FeedKvStoreData>;
   // Exposed functions
-  createUserFeed(name: string, iconUri?: string): Promise<void>;
+  createUserFeed(name: string, iconUri?: string): Promise<string | undefined>;
   deleteUserFeed(address: string): Promise<void>;
 };
 
@@ -228,6 +228,7 @@ const useRegistryUser = (): UseRegistryUserState => {
 
     // Create the posts feed store
     const newPostsFeedStore = await storeCacheContext.getFeedStore({
+      // TODO: Extract this, and maybe generate a unique ID?
       addressOrName: userId + '/feeds/' + name + '/posts',
       createParams: {
         accessController: {
@@ -266,6 +267,8 @@ const useRegistryUser = (): UseRegistryUserState => {
     );
 
     await addFeedToUserData(userKvStoreState.store, feedKvStoreAddress);
+
+    return feedKvStoreAddress;
   };
 
   const deleteUserFeed = async (address: string) => {
