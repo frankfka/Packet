@@ -14,6 +14,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Link from 'next/link';
 import React, { MouseEventHandler } from 'react';
+import getFeedAvatarPlaceholderName from '../../../../util/getFeedAvatarPlaceholderName';
 import FeedKvStoreData from '../../../../util/orbitDb/feed/FeedKvStoreData';
 
 type Props = {
@@ -49,10 +50,7 @@ const RegistryFeedList: React.FC<Props> = ({ feeds }) => {
           };
 
           // First letter of the name, capitalized
-          const avatarPlaceholderName = feed.name
-            .replace(/s+/, '')
-            .substr(0, 1)
-            .toUpperCase();
+          const avatarPlaceholderName = getFeedAvatarPlaceholderName(feed.name);
 
           return (
             <div key={address}>
