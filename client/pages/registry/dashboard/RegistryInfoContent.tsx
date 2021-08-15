@@ -1,6 +1,6 @@
 import { Button, Typography } from '@material-ui/core';
 import React from 'react';
-import CenteredInfoContainer from '../../components/CenteredInfoContainer/CenteredInfoContainer';
+import CenteredInfoContainer from '../../../components/CenteredInfoContainer/CenteredInfoContainer';
 
 export const NoWeb3ProviderContent: React.FC = () => {
   return (

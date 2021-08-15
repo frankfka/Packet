@@ -4,7 +4,7 @@ import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
 import React, { useCallback } from 'react';
 
 type Props = TextFieldProps & {
-  readonly?: boolean;
+  readOnly?: boolean;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
 
 const TextFieldWithCopy: React.FC<Props> = ({
   InputProps,
-  readonly,
+  readOnly,
   ...restProps
 }) => {
   const classes = useStyles();
@@ -27,7 +27,7 @@ const TextFieldWithCopy: React.FC<Props> = ({
 
   const mergedInputProps = {
     ...InputProps,
-    readonly,
+    readOnly,
     endAdornment: (
       <IconButton
         className={classes.copyButton}

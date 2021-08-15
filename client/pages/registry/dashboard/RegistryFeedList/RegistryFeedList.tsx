@@ -14,7 +14,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Link from 'next/link';
 import React, { MouseEventHandler } from 'react';
-import FeedKvStoreData from '../../../util/orbitDb/feed/FeedKvStoreData';
+import FeedKvStoreData from '../../../../util/orbitDb/feed/FeedKvStoreData';
 
 type Props = {
   feeds: Record<string, FeedKvStoreData>;
@@ -56,7 +56,7 @@ const RegistryFeedList: React.FC<Props> = ({ feeds }) => {
 
           return (
             <div key={address}>
-              <Link href={`/registry/feed/${encodeURIComponent(feed.name)}`}>
+              <Link href={`/registry/feed/${encodeURIComponent(address)}`}>
                 <ListItem className={classes.listItemContainer}>
                   <ListItemAvatar>
                     <Avatar

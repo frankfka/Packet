@@ -1,9 +1,9 @@
 import { Button, Grid, Paper, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import React, { useState } from 'react';
-import AppPage from '../../components/AppPage/AppPage';
-import { useEthereumContext } from '../../context/ethereum/ethereumContext';
-import { useRegistryApp } from '../../context/registryApp/registryAppContext';
+import AppPage from '../../../components/AppPage/AppPage';
+import { useEthereumContext } from '../../../context/ethereum/ethereumContext';
+import { useRegistryApp } from '../../../context/registryApp/registryAppContext';
 import CreateNewFeedDialog from './CreateNewFeedDialog/CreateNewFeedDialog';
 import RegistryFeedList from './RegistryFeedList/RegistryFeedList';
 import {
@@ -11,10 +11,6 @@ import {
   NoUserFeedsContent,
   NoWeb3ProviderContent,
 } from './RegistryInfoContent';
-
-function getRandomInt(max: number): string {
-  return Math.floor(Math.random() * max).toFixed(0);
-}
 
 const RegistryDashboardPage = () => {
   // Context

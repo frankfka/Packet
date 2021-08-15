@@ -1,4 +1,4 @@
-import RegistryDashboardPage from '../../client/pages/registry/RegistryDashboardPage';
+import RegistryDashboardPage from '../../client/pages/registry/dashboard/RegistryDashboardPage';
 
 /*
 Page for Packet Registry, the publishing dashboard.

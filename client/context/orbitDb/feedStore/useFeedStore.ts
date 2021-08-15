@@ -1,39 +1,43 @@
-import KeyValueStore from 'orbit-db-kvstore';
+import FeedStore from 'orbit-db-feedstore';
 import { useEffect, useState } from 'react';
 import getLogger from '../../../../util/getLogger';
-import { useStoreCache } from '../storeCacheContext';
 import {
-  GetKvStoreParams,
-  OrbitKvStoreData,
-} from '../../../util/orbitDb/orbitDbKvStoreUtils';
+  GetFeedStoreParams,
+  OrbitFeedDocsKeyedByHash,
+} from '../../../util/orbitDb/orbitDbFeedStoreUtils';
+import { useStoreCache } from '../storeCacheContext';
 
-export const logger = getLogger('UseKvStore');
+export const logger = getLogger('UseFeedStore');
 
-export type KvStoreState<TValueType> = {
+export type FeedStoreState<TDocType> = {
   isLoadingStore: boolean;
-  store?: KeyValueStore<TValueType>;
-  storeData?: OrbitKvStoreData<TValueType>;
+  store?: FeedStore<TDocType>;
+  storeData?: OrbitFeedDocsKeyedByHash<TDocType>;
   reloadStoreData(): void;
   initError?: boolean;
 };
 
-export const useKvStore = <TValueType>(
-  // Optional params so that we don't need to create the store when creating the hook
-  params?: GetKvStoreParams
-): KvStoreState<TValueType> => {
+/*
+This is very similar to useKvStore, but we shouldn't generalize this to support
+pagination
+ */
+export const useFeedStore = <TDocType>(
+  params?: GetFeedStoreParams
+): FeedStoreState<TDocType> => {
   const storeCacheContext = useStoreCache();
 
   const [isLoadingStore, setIsLoadingStore] = useState(false);
-  const [kvStore, setKvStore] = useState<KeyValueStore<TValueType>>();
-  const [kvStoreData, setKvStoreData] =
-    useState<OrbitKvStoreData<TValueType>>();
+  const [feedStore, setFeedStore] = useState<FeedStore<TDocType>>();
+  const [feedStoreData, setFeedStoreData] = useState<
+    OrbitFeedDocsKeyedByHash<TDocType>
+  >({});
   const [storeInitError, setStoreInitError] = useState(false);
 
   // Resets state of the hook
   const resetState = () => {
     setIsLoadingStore(false);
-    setKvStoreData(undefined);
-    setKvStore(undefined);
+    setFeedStoreData({});
+    setFeedStore(undefined);
     setStoreInitError(false);
   };
 
@@ -41,19 +45,26 @@ export const useKvStore = <TValueType>(
   const reloadStoreData = async () => {
     logger.debug('Reloading store data');
 
-    if (kvStore) {
-      await kvStore.load();
-
-      // Use spread operator to create a new object as `kvStore.all`
-      // is the same reference between loads
-      // @ts-ignore - Ignore to disable typechecking of store types
-      setKvStoreData({ ...kvStore.all });
+    if (feedStore) {
+      await feedStore.load();
+      const newData = feedStore
+        .iterator({
+          // TODO These should be extracted!
+          limit: -1, // Get all documents
+          reverse: true, // Most recent documents first
+        })
+        .collect()
+        .reduce((obj: Record<string, TDocType>, entry) => {
+          obj[entry.hash] = entry.payload.value as TDocType;
+          return obj;
+        }, {});
+      setFeedStoreData(newData);
     } else {
-      setKvStoreData(undefined);
+      setFeedStoreData({});
     }
   };
 
-  // Create the KV store
+  // Create the Feed store
   useEffect(() => {
     // Reset all state
     resetState();
@@ -67,15 +78,15 @@ export const useKvStore = <TValueType>(
 
       setIsLoadingStore(true);
       try {
-        const store = await storeCacheContext.getKvStore<TValueType>(params);
+        const store = await storeCacheContext.getFeedStore<TDocType>(params);
 
         if (cancelled) return;
 
-        logger.debug('Retrieved KV store', store);
+        logger.debug('Retrieved Feed store', store);
 
-        setKvStore(store);
+        setFeedStore(store);
       } catch (err) {
-        logger.error('Error getting KV store', err);
+        logger.error('Error getting Feed store', err);
 
         if (cancelled) return;
 
@@ -85,11 +96,15 @@ export const useKvStore = <TValueType>(
     };
 
     getStore();
+
+    return () => {
+      cancelled = true;
+    };
   }, [storeCacheContext, params]);
 
   // Initialize listeners when store is retrieved
   useEffect(() => {
-    if (kvStore == null) return;
+    if (feedStore == null) return;
 
     logger.debug('Listening to events');
 
@@ -97,38 +112,38 @@ export const useKvStore = <TValueType>(
     reloadStoreData();
 
     // Occurs when replication is in-progress
-    kvStore.events.on('replicate', (address) => {
+    feedStore.events.on('replicate', (address) => {
       logger.debug('db.events.replicate', address.toString());
     });
 
     // Occurs when replication is done
-    kvStore.events.on('replicated', (address) => {
+    feedStore.events.on('replicated', (address) => {
       logger.debug('db.events.replicated', address.toString());
       reloadStoreData();
     });
 
     // Occurs when a new operation is executed
-    kvStore.events.on('write', (address, entry) => {
+    feedStore.events.on('write', (address, entry) => {
       logger.debug('db.events.write', address.toString(), 'Entry', entry);
       reloadStoreData();
     });
 
     // Occurs when a peer connects
-    kvStore.events.on('peer', (peer) => {
+    feedStore.events.on('peer', (peer) => {
       logger.debug('db.events.peer', peer);
     });
 
     return () => {
-      logger.debug('Cleaning up current KV store');
+      logger.debug('Cleaning up current Feed store');
       resetState();
-      kvStore.events.removeAllListeners();
+      feedStore.events.removeAllListeners();
     };
-  }, [kvStore]);
+  }, [feedStore]);
 
-  const state: KvStoreState<TValueType> = {
+  const state: FeedStoreState<TDocType> = {
     isLoadingStore,
-    store: kvStore,
-    storeData: kvStoreData,
+    store: feedStore,
+    storeData: feedStoreData,
     reloadStoreData,
     initError: storeInitError,
   };

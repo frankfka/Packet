@@ -1,11 +1,11 @@
 import KeyValueStore from 'orbit-db-kvstore';
 import { useEffect, useState } from 'react';
 import getLogger from '../../../../util/getLogger';
-import { useStoreCache } from '../storeCacheContext';
 import {
   GetKvStoreParams,
   OrbitKvStoreData,
 } from '../../../util/orbitDb/orbitDbKvStoreUtils';
+import { useStoreCache } from '../storeCacheContext';
 
 export const logger = getLogger('UseKvStore');
 
@@ -91,6 +91,10 @@ export const useKvStore = <TData>(
     };
 
     getStore();
+
+    return () => {
+      cancelled = true;
+    };
   }, [storeCacheContext, params]);
 
   // Initialize listeners when store is retrieved

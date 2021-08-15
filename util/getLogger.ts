@@ -18,8 +18,9 @@ prefix.apply(log, {
 const getLogger = (name: string): Logger => {
   const logger = log.getLogger(name);
   // TODO: Dynamic levels
-  logger.enableAll();
+  // logger.enableAll();
 
+  logger.setLevel('info');
   return logger;
 };
 

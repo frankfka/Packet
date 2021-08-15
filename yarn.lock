@@ -2711,6 +2711,11 @@ datastore-pubsub@^0.6.1:
     interface-datastore "^4.0.0"
     uint8arrays "^2.0.5"
 
+date-fns@^2.23.0:
+  version "2.23.0"
+  resolved "http://npm.redfintest.com:1234/date-fns/-/date-fns-2.23.0.tgz#4e886c941659af0cf7b30fafdd1eaa37e88788a9"
+  integrity sha512-5ycpauovVyAk0kXNZz6ZoB9AYMZB4DObse7P3BPWmyEjXNORTI8EJ6X0uaSAq4sCHzM1uajzrkr6HnsLQpxGXA==
+
 dateformat@^4.5.1:
   version "4.5.1"
   resolved "http://npm.redfintest.com:1234/dateformat/-/dateformat-4.5.1.tgz#c20e7a9ca77d147906b6dc2261a8be0a5bd2173c"

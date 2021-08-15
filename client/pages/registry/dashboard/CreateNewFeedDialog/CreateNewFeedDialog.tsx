@@ -9,9 +9,9 @@ import {
   Typography,
 } from '@material-ui/core';
 import React, { useState } from 'react';
-import RequestIdentityNotice from '../../../components/RequestIdentityNotice/RequestIdentityNotice';
-import SpacingContainer from '../../../components/SpacingContainer/SpacingContainer';
-import { useRegistryApp } from '../../../context/registryApp/registryAppContext';
+import RequestIdentityNotice from '../../../../components/RequestIdentityNotice/RequestIdentityNotice';
+import SpacingContainer from '../../../../components/SpacingContainer/SpacingContainer';
+import { useRegistryApp } from '../../../../context/registryApp/registryAppContext';
 import CreateNewFeedSuccess from './CreateNewFeedSuccess';
 
 type Props = {

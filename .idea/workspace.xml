@@ -5,13 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e8b09ef-54aa-4687-914a-63efea80ab9c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/client/pages/registry/RegistryFeedList/RegistryFeedList.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/util/orbitDb/feed/feedOrbitDbNameUtils.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/registry/feed/[feedName].tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/pages/registry/feed/RegistryFeedPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/util/dateUtils.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/util/orbitDb/feed/postFeedStoreUtils.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/registry/feed/[feedRootKvStoreAddress].tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/hooks/useRegistryUser.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/hooks/useRegistryUser.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/pages/registry/RegistryDashboardPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/registry/RegistryDashboardPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/registry.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/registry/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/components/TextFieldWithCopy/TextFieldWithCopy.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/components/TextFieldWithCopy/TextFieldWithCopy.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/context/orbitDb/feedStore/useFeedStore.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/orbitDb/feedStore/useFeedStore.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/context/orbitDb/kvStore/useKvStore.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/orbitDb/kvStore/useKvStore.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/pages/registry/CreateNewFeedDialog/CreateNewFeedDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/registry/dashboard/CreateNewFeedDialog/CreateNewFeedDialog.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/pages/registry/CreateNewFeedDialog/CreateNewFeedSuccess.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/registry/dashboard/CreateNewFeedDialog/CreateNewFeedSuccess.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/pages/registry/RegistryDashboardPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/registry/dashboard/RegistryDashboardPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/pages/registry/RegistryFeedList/RegistryFeedList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/registry/dashboard/RegistryFeedList/RegistryFeedList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/pages/registry/RegistryInfoContent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/registry/dashboard/RegistryInfoContent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/util/orbitDb/feed/FeedPostData.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/util/orbitDb/feed/FeedPostData.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/util/orbitDb/orbitDbFeedStoreUtils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/util/orbitDb/orbitDbFeedStoreUtils.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/registry/feed/[feedName].tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/registry/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/registry/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/getLogger.ts" beforeDir="false" afterPath="$PROJECT_DIR$/util/getLogger.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,6 +78,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/client/pages/registry/dashboard" />
       <recent name="$PROJECT_DIR$/pages/registry" />
     </key>
   </component>
@@ -94,7 +108,7 @@
       <option name="presentableId" value="Default" />
       <updated>1628893858331</updated>
       <workItem from="1628893860653" duration="1111000" />
-      <workItem from="1628901643149" duration="12430000" />
+      <workItem from="1628901643149" duration="21733000" />
     </task>
     <servers />
   </component>

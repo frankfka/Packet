@@ -1,7 +1,7 @@
 import { Typography } from '@material-ui/core';
 import React from 'react';
-import CenteredInfoContainer from '../../../components/CenteredInfoContainer/CenteredInfoContainer';
-import TextFieldWithCopy from '../../../components/TextFieldWithCopy/TextFieldWithCopy';
+import CenteredInfoContainer from '../../../../components/CenteredInfoContainer/CenteredInfoContainer';
+import TextFieldWithCopy from '../../../../components/TextFieldWithCopy/TextFieldWithCopy';
 
 type Props = {
   createdFeedAddress: string;
@@ -19,7 +19,7 @@ const CreateNewFeedSuccess: React.FC<Props> = ({ createdFeedAddress }) => {
       </Typography>
       <TextFieldWithCopy
         value={createdFeedAddress}
-        readonly
+        readOnly
         variant="outlined"
       />
     </CenteredInfoContainer>
