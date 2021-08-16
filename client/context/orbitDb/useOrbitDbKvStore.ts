@@ -2,12 +2,16 @@ import KeyValueStore from 'orbit-db-kvstore';
 import { useEffect, useState } from 'react';
 import getLogger from '../../../util/getLogger';
 import {
-  GetKvStoreParams,
+  initOrbitDbStoreListeners,
+  removeOrbitDbStoreListeners,
+} from '../../util/orbitDb/orbitDbStoreUtils';
+import {
+  GetOrbitDbStoreParams,
   OrbitKvStoreData,
-} from '../../util/orbitDb/orbitDbKvStoreUtils';
+} from '../../util/orbitDb/OrbitDbTypes';
 import { useStoreCache } from './storeCacheContext';
 
-export const logger = getLogger('UseKvStore');
+export const logger = getLogger('UseOrbitDBKvStore');
 
 // Exposes KNOWN kv data types
 export type KvStoreData<TData> = TData & OrbitKvStoreData<unknown>;
@@ -22,7 +26,7 @@ export type KvStoreState<TData> = {
 
 export const useOrbitDbKvStore = <TData>(
   // Optional params so that we don't need to create the store when creating the hook
-  params?: GetKvStoreParams
+  params?: Omit<GetOrbitDbStoreParams, 'type'>
 ): KvStoreState<TData> => {
   const storeCacheContext = useStoreCache();
 
@@ -64,8 +68,9 @@ export const useOrbitDbKvStore = <TData>(
     // Reset all state
     resetState();
 
-    if (storeCacheContext == null || params == null) return;
+    if (storeCacheContext.isLoading || params == null) return;
 
+    let storeInstance: KeyValueStore<unknown> | undefined = undefined;
     let cancelled = false;
 
     const getStore = async () => {
@@ -73,13 +78,30 @@ export const useOrbitDbKvStore = <TData>(
 
       setIsLoadingStore(true);
       try {
-        const store = await storeCacheContext.getKvStore<unknown>(params);
+        storeInstance = await storeCacheContext.getStore<
+          KeyValueStore<unknown>
+        >({
+          ...params,
+          type: 'keyvalue',
+        });
 
         if (cancelled) return;
 
-        logger.debug('Retrieved KV store', store);
+        logger.debug('Retrieved KV store', storeInstance);
 
-        setKvStore(store);
+        // Setup listeners
+        initOrbitDbStoreListeners(storeInstance, {
+          replicated: (address) => {
+            logger.debug('db.events.replicated', address.toString());
+            reloadStoreDataForStore(storeInstance);
+          },
+          write: (address, entry) => {
+            logger.debug('db.events.write', address.toString(), 'Entry', entry);
+            reloadStoreDataForStore(storeInstance);
+          },
+        });
+
+        setKvStore(storeInstance);
       } catch (err) {
         logger.error('Error getting KV store', err);
 
@@ -93,45 +115,26 @@ export const useOrbitDbKvStore = <TData>(
     getStore();
 
     return () => {
+      if (storeInstance != null) {
+        removeOrbitDbStoreListeners(storeInstance);
+      }
       cancelled = true;
     };
-  }, [storeCacheContext, params]);
+  }, [storeCacheContext.isLoading, params]);
 
   // Initialize listeners when store is retrieved
   useEffect(() => {
     if (kvStore == null) return;
 
+    // Keep a ref for cleanup function
     let storeRef = kvStore;
-
-    logger.debug('Listening to events');
 
     // Load store data on init
     reloadStoreDataForStore(storeRef);
 
-    // Occurs when replication is in-progress
-    storeRef.events.on('replicate', (address) => {
-      logger.debug('db.events.replicate', address.toString());
-    });
-
-    // Occurs when replication is done
-    storeRef.events.on('replicated', (address) => {
-      logger.debug('db.events.replicated', address.toString());
-      reloadStoreDataForStore(storeRef);
-    });
-
-    // Occurs when a new operation is executed
-    storeRef.events.on('write', (address, entry) => {
-      logger.debug('db.events.write', address.toString(), 'Entry', entry);
-      reloadStoreDataForStore(storeRef);
-    });
-
-    // Occurs when a peer connects
-    storeRef.events.on('peer', (peer) => {
-      logger.debug('db.events.peer', peer);
-    });
-
     return () => {
-      logger.debug('Cleaning up current KV store listeners');
+      logger.debug('Cleaning up current KV store');
+      resetState();
       storeRef.events.removeAllListeners();
     };
   }, [kvStore]);

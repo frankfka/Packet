@@ -2,12 +2,16 @@ import FeedStore from 'orbit-db-feedstore';
 import { useEffect, useState } from 'react';
 import getLogger from '../../../util/getLogger';
 import {
-  GetFeedStoreParams,
+  initOrbitDbStoreListeners,
+  removeOrbitDbStoreListeners,
+} from '../../util/orbitDb/orbitDbStoreUtils';
+import {
+  GetOrbitDbStoreParams,
   OrbitFeedDocsKeyedByHash,
-} from '../../util/orbitDb/orbitDbFeedStoreUtils';
+} from '../../util/orbitDb/OrbitDbTypes';
 import { useStoreCache } from './storeCacheContext';
 
-export const logger = getLogger('UseFeedStore');
+export const logger = getLogger('UseOrbitDBFeedStore');
 
 export type FeedStoreState<TDocType> = {
   isLoadingStore: boolean;
@@ -22,7 +26,7 @@ This is very similar to useKvStore, but we shouldn't generalize this to support
 pagination
  */
 export const useOrbitDbFeedStore = <TDocType>(
-  params?: GetFeedStoreParams
+  params?: Omit<GetOrbitDbStoreParams, 'type'>
 ): FeedStoreState<TDocType> => {
   const storeCacheContext = useStoreCache();
 
@@ -42,12 +46,12 @@ export const useOrbitDbFeedStore = <TDocType>(
   };
 
   // Manually reloads all the data in the store
-  const reloadStoreData = async () => {
+  const reloadStoreDataForStore = async (store?: FeedStore<TDocType>) => {
     logger.debug('Reloading store data');
 
-    if (feedStore) {
-      await feedStore.load();
-      const newData = feedStore
+    if (store) {
+      await store.load();
+      const newData = store
         .iterator({
           // TODO These should be extracted!
           limit: -1, // Get all documents
@@ -64,27 +68,49 @@ export const useOrbitDbFeedStore = <TDocType>(
     }
   };
 
-  // Create the Feed store
+  const reloadStoreData = async () => {
+    await reloadStoreDataForStore(feedStore);
+  };
+
+  // Create the Feed store when the parameters or store cache changes
   useEffect(() => {
     // Reset all state
     resetState();
 
-    if (storeCacheContext == null || params == null) return;
+    if (storeCacheContext.isLoading || params == null) return;
 
     let cancelled = false;
+
+    // Keep a reference for the cancel function
+    let storeInstance: FeedStore<TDocType> | undefined = undefined;
 
     const getStore = async () => {
       logger.debug('Getting store with params', params);
 
       setIsLoadingStore(true);
       try {
-        const store = await storeCacheContext.getFeedStore<TDocType>(params);
+        storeInstance = await storeCacheContext.getStore<FeedStore<TDocType>>({
+          ...params,
+          type: 'feed',
+        });
 
         if (cancelled) return;
 
-        logger.debug('Retrieved Feed store', store);
+        logger.debug('Retrieved Feed store', storeInstance);
 
-        setFeedStore(store);
+        // Setup listeners
+        initOrbitDbStoreListeners(storeInstance, {
+          replicated: (address) => {
+            logger.debug('db.events.replicated', address.toString());
+            reloadStoreDataForStore(storeInstance);
+          },
+          write: (address, entry) => {
+            logger.debug('db.events.write', address.toString(), 'Entry', entry);
+            reloadStoreDataForStore(storeInstance);
+          },
+        });
+
+        setFeedStore(storeInstance);
       } catch (err) {
         logger.error('Error getting Feed store', err);
 
@@ -99,44 +125,25 @@ export const useOrbitDbFeedStore = <TDocType>(
 
     return () => {
       cancelled = true;
+      if (storeInstance != null) {
+        removeOrbitDbStoreListeners(storeInstance);
+      }
     };
   }, [storeCacheContext, params]);
 
-  // Initialize listeners when store is retrieved
+  // Load data and handle store cleanup
   useEffect(() => {
     if (feedStore == null) return;
 
-    logger.debug('Listening to events');
+    let storeRef = feedStore; // Keep a ref for cleanup function
 
     // Load store data on init
-    reloadStoreData();
-
-    // Occurs when replication is in-progress
-    feedStore.events.on('replicate', (address) => {
-      logger.debug('db.events.replicate', address.toString());
-    });
-
-    // Occurs when replication is done
-    feedStore.events.on('replicated', (address) => {
-      logger.debug('db.events.replicated', address.toString());
-      reloadStoreData();
-    });
-
-    // Occurs when a new operation is executed
-    feedStore.events.on('write', (address, entry) => {
-      logger.debug('db.events.write', address.toString(), 'Entry', entry);
-      reloadStoreData();
-    });
-
-    // Occurs when a peer connects
-    feedStore.events.on('peer', (peer) => {
-      logger.debug('db.events.peer', peer);
-    });
+    reloadStoreDataForStore(storeRef);
 
     return () => {
       logger.debug('Cleaning up current Feed store');
       resetState();
-      feedStore.events.removeAllListeners();
+      removeOrbitDbStoreListeners(storeRef);
     };
   }, [feedStore]);
 

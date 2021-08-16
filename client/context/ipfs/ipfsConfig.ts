@@ -1,6 +1,4 @@
-type IPFSConfig = {
-  // TODO: typing
-};
+type IPFSConfig = Record<string, any>;
 
 const ipfsConfig: IPFSConfig = {
   start: true,

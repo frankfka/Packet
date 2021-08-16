@@ -1,4 +1,5 @@
 import { mapValues } from 'lodash';
+import FeedStore from 'orbit-db-feedstore';
 import KeyValueStore from 'orbit-db-kvstore';
 import { useEffect, useState } from 'react';
 import getLogger from '../../util/getLogger';
@@ -9,19 +10,24 @@ import {
   getStoreAddressForUserFromLocalStorage,
   setStoreAddressForUserToLocalStorage,
 } from '../util/localStorage/userDbAddressLocalStorage';
-import FeedKvStoreData from '../util/orbitDb/feed/FeedKvStoreData';
+import {
+  FeedKvStoreData,
+  FeedPostData,
+} from '../util/orbitDb/feed/FeedDataTypes';
 import {
   getFeedId,
   getFeedPostsStoreName,
-} from '../util/orbitDb/feed/feedOrbitDbNameUtils';
-import initFeedKvStoreData from '../util/orbitDb/feed/initFeedKvStoreData';
-import { GetKvStoreParams } from '../util/orbitDb/orbitDbKvStoreUtils';
-import addFeedToUserData from '../util/orbitDb/user/addFeedToUserData';
-import deleteFeedFromUserData from '../util/orbitDb/user/deleteFeedFromUserData';
-import initUserStoreData from '../util/orbitDb/user/initUserStoreData';
-import isUserStoreInitialized from '../util/orbitDb/user/isUserStoreInitialized';
-import UserKvStoreData from '../util/orbitDb/user/UserKvStoreData';
-import { getUserDbName } from '../util/orbitDb/user/userOrbitDbNameUtils';
+  saveFeedKvStoreData,
+} from '../util/orbitDb/feed/postFeedStoreUtils';
+import { GetOrbitDbStoreParams } from '../util/orbitDb/OrbitDbTypes';
+import RegistryUserKvStoreData from '../util/orbitDb/user/RegistryUserKvStoreData';
+import {
+  addFeedToUserData,
+  deleteFeedFromUserData,
+  getRegistryUserDbName,
+  isRegistryUserStoreInitialized,
+  saveRegistryUserStoreData,
+} from '../util/orbitDb/user/registryUserUtils';
 
 const logger = getLogger('UseRegistryUser');
 
@@ -31,7 +37,7 @@ export type UseRegistryUserState = {
   setUserId(id?: string): void;
   isLoadingUser: boolean;
   loadError: boolean;
-  userKvStoreData?: UserKvStoreData;
+  userKvStoreData?: RegistryUserKvStoreData;
   // User Feeds State
   isLoadingUserFeeds: boolean;
   loadedUserFeeds: Record<string, FeedKvStoreData>;
@@ -44,11 +50,11 @@ export type UseRegistryUserState = {
 const useRegistryUser = (): UseRegistryUserState => {
   const [userId, setUserId] = useState<string>();
   const [userKvStoreParams, setUserKvStoreParams] =
-    useState<GetKvStoreParams>();
+    useState<Omit<GetOrbitDbStoreParams, 'type'>>();
 
   const orbitDbContext = useOrbitDb();
   const userKvStoreState =
-    useOrbitDbKvStore<UserKvStoreData>(userKvStoreParams);
+    useOrbitDbKvStore<RegistryUserKvStoreData>(userKvStoreParams);
 
   // Initialize user on load
   useEffect(() => {
@@ -75,7 +81,7 @@ const useRegistryUser = (): UseRegistryUserState => {
         // The useEffect hook below will pick up on the store creation and attempt to write to it if the
         // identity is valid
         setUserKvStoreParams({
-          addressOrName: getUserDbName(userId),
+          addressOrName: getRegistryUserDbName(userId),
           createParams: {
             accessController: {
               write: [userId], // Restrict write to user
@@ -104,7 +110,7 @@ const useRegistryUser = (): UseRegistryUserState => {
         return;
       }
 
-      if (isUserStoreInitialized(userKvStoreState.storeData)) {
+      if (isRegistryUserStoreInitialized(userKvStoreState.storeData)) {
         // Store is initialized, no action needed
         logger.debug('User has existing store data, skipping init');
         return;
@@ -113,7 +119,9 @@ const useRegistryUser = (): UseRegistryUserState => {
       if (orbitDbContext.identity?.id === userId) {
         // Can initialize the store
         logger.debug('Initializing user store');
-        await initUserStoreData(userKvStoreState.store);
+        await saveRegistryUserStoreData(userKvStoreState.store, {
+          feeds: [],
+        });
         // Save to localstorage
         setStoreAddressForUserToLocalStorage(
           'registry',
@@ -151,7 +159,8 @@ const useRegistryUser = (): UseRegistryUserState => {
       // Reset state
       setLoadedUserFeedStores({});
 
-      if (userKvStoreState.isLoadingStore || storeCacheContext == null) return;
+      if (userKvStoreState.isLoadingStore || storeCacheContext.isLoading)
+        return;
 
       logger.debug('Loading user feed stores');
 
@@ -175,8 +184,9 @@ const useRegistryUser = (): UseRegistryUserState => {
       for (const feedKvStoreAddress of userStoreData.feeds) {
         if (cancelled) break;
 
-        const store = await storeCacheContext.getKvStore<unknown>({
+        const store = await storeCacheContext.getStore<KeyValueStore<unknown>>({
           addressOrName: feedKvStoreAddress,
+          type: 'keyvalue',
         });
         await store.load();
 
@@ -205,7 +215,7 @@ const useRegistryUser = (): UseRegistryUserState => {
   }, [
     userKvStoreState.storeData,
     userKvStoreState.isLoadingStore,
-    storeCacheContext == null,
+    storeCacheContext.isLoading,
   ]);
 
   // Create the actual user feed data
@@ -230,8 +240,8 @@ const useRegistryUser = (): UseRegistryUserState => {
       return;
     }
 
-    if (storeCacheContext == null) {
-      logger.error('No store cache context, aborting');
+    if (storeCacheContext.isLoading) {
+      logger.error('Loading store cache context, aborting');
       return;
     }
 
@@ -244,14 +254,16 @@ const useRegistryUser = (): UseRegistryUserState => {
     const feedPostsStoreName = getFeedPostsStoreName(feedId);
 
     // Create the posts feed store
-    const newPostsFeedStore = await storeCacheContext.getFeedStore({
-      addressOrName: feedPostsStoreName,
-      createParams: {
-        accessController: {
-          write: [userId],
+    const newPostsFeedStore: FeedStore<FeedPostData> =
+      await storeCacheContext.getStore({
+        addressOrName: feedPostsStoreName,
+        type: 'feed',
+        createParams: {
+          accessController: {
+            write: [userId],
+          },
         },
-      },
-    });
+      });
 
     const postsFeedStoreAddress = newPostsFeedStore.address.toString();
     logger.debug(
@@ -267,15 +279,17 @@ const useRegistryUser = (): UseRegistryUserState => {
       publisherId: userId,
     };
 
-    const newFeedkvStore = await storeCacheContext.getKvStore({
-      addressOrName: feedId,
-      createParams: {
-        accessController: {
-          write: [userId],
+    const newFeedkvStore: KeyValueStore<unknown> =
+      await storeCacheContext.getStore({
+        addressOrName: feedId,
+        type: 'keyvalue',
+        createParams: {
+          accessController: {
+            write: [userId],
+          },
         },
-      },
-    });
-    await initFeedKvStoreData(newFeedkvStore, feedKvStoreData);
+      });
+    await saveFeedKvStoreData(newFeedkvStore, feedKvStoreData);
     const feedKvStoreAddress = newFeedkvStore.address.toString();
 
     logger.debug(
@@ -314,7 +328,7 @@ const useRegistryUser = (): UseRegistryUserState => {
     // Delete all local data
     await feedStore.drop();
     // Delete from cache
-    storeCacheContext?.removeFeedStore(address);
+    storeCacheContext?.removeStore(feedStore);
 
     // Remove from user data
     await deleteFeedFromUserData(userKvStoreState.store, address);

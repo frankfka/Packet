@@ -5,9 +5,9 @@ import {
   getCurrentUserIdFromLocalStorage,
   setCurrentUserIdFromLocalStorage,
 } from '../../util/localStorage/currentUserLocalStorage';
-import FeedKvStoreData from '../../util/orbitDb/feed/FeedKvStoreData';
+import { FeedKvStoreData } from '../../util/orbitDb/feed/FeedDataTypes';
 import { createEthereumOrbitDbIdentity } from '../../util/orbitDb/orbitDbUtils';
-import UserKvStoreData from '../../util/orbitDb/user/UserKvStoreData';
+import RegistryUserKvStoreData from '../../util/orbitDb/user/RegistryUserKvStoreData';
 import { useEthereumContext } from '../ethereum/ethereumContext';
 import { useOrbitDb } from '../orbitDb/orbitDbContext';
 
@@ -21,7 +21,7 @@ type RegistryAppContextData = {
   // User state from UserKvStore
   userId?: string;
   loadingUserData: boolean;
-  userData?: UserKvStoreData;
+  userData?: RegistryUserKvStoreData;
   isOrbitIdentityInitialized: boolean;
   requestOrbitIdentity(): Promise<void>;
   // Feed functions
@@ -81,10 +81,14 @@ export const RegistryAppContextProvider: React.FC = ({ children }) => {
       logger.debug('Current user ID exists', currentUserId);
       registryUserState.setUserId(currentUserId);
     }
-
-    // Initial logic load complete
-    setIsReady(true);
   }, []);
+
+  // Listen for orbitDB ready
+  useEffect(() => {
+    if (orbitDbContext.initError || orbitDbContext.orbitDb != null) {
+      setIsReady(true);
+    }
+  }, [orbitDbContext.initError, orbitDbContext.orbitDb]);
 
   // Login function - will initialize both ethereum AND the orbitDB identity
   const login = async () => {

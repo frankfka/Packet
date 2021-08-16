@@ -1,137 +1,82 @@
-import FeedStore from 'orbit-db-feedstore';
-import KeyValueStore from 'orbit-db-kvstore';
+import Store from 'orbit-db-store';
 import React, { createContext, useContext, useEffect, useRef } from 'react';
 import getLogger from '../../../util/getLogger';
 import {
-  createFeedStore,
-  GetFeedStoreParams,
-} from '../../util/orbitDb/orbitDbFeedStoreUtils';
-import {
-  createKvStore,
-  GetKvStoreParams,
-} from '../../util/orbitDb/orbitDbKvStoreUtils';
-import { getStoreAddress } from '../../util/orbitDb/orbitDbStoreUtils';
+  createOrbitDbStore,
+  getStoreAddress,
+} from '../../util/orbitDb/orbitDbStoreUtils';
+import { GetOrbitDbStoreParams } from '../../util/orbitDb/OrbitDbTypes';
 import { useOrbitDb } from './orbitDbContext';
 
 const logger = getLogger('StoreCache-Context');
 
 type StoreCacheContextData = {
-  // OrbitDB KV Store
-  getKvStore<TValueType>(
-    params: GetKvStoreParams
-  ): Promise<KeyValueStore<TValueType>>;
-  removeKvStore(address: string): Promise<void>;
-  // OrbitDB Feed store
-  getFeedStore<TValueType>(
-    params: GetKvStoreParams
-  ): Promise<FeedStore<TValueType>>;
-  removeFeedStore(address: string): Promise<void>;
+  isLoading: boolean;
+  getStore<TStoreType extends Store>(
+    params: GetOrbitDbStoreParams
+  ): Promise<TStoreType>;
+  removeStore(store: Store): Promise<void>;
 };
 
-export const StoreCacheContext = createContext<StoreCacheContextData | null>(
-  null
+export const StoreCacheContext = createContext<StoreCacheContextData>(
+  {} as unknown as StoreCacheContextData
 );
 
-// TODO: Combine feed and kv
 export const StoreCacheContextProvider: React.FC = ({ children }) => {
-  // TODO: Expose loading
-  const { orbitDb } = useOrbitDb();
-  const storeCache = useRef<
-    Record<string, KeyValueStore<unknown> | FeedStore<unknown>>
-  >({});
+  const { orbitDb, isLoading: isLoadingOrbitDb } = useOrbitDb();
+  const storeCache = useRef<Record<string, Store>>({});
 
   // Reset the store cache when we change the root OrbitDB instance
   useEffect(() => {
     storeCache.current = {};
   }, [orbitDb]);
 
-  const getKvStore = async <TValueType extends {}>(
-    params: GetKvStoreParams
-  ): Promise<KeyValueStore<TValueType>> => {
+  const getStore = async <TStoreType extends Store>(
+    params: GetOrbitDbStoreParams
+  ) => {
     if (orbitDb == null) {
       throw Error('OrbitDB instance is not defined');
     }
 
-    const storeAddress = await getStoreAddress(orbitDb, 'keyvalue', params);
-    const cachedStore = storeCache.current[
-      storeAddress
-    ] as KeyValueStore<TValueType>;
+    const storeAddress = await getStoreAddress(orbitDb, params);
+    const cachedStore = storeCache.current[storeAddress] as TStoreType;
 
     if (cachedStore) {
-      logger.debug('Returning cached KV store for address', storeAddress);
+      logger.debug('Returning cached store for address', storeAddress);
       return cachedStore;
     }
 
     logger.debug(
-      'Loading new KV store in cache for address',
+      'Loading new store in cache for address',
       storeAddress,
       'Params',
       params
     );
     // No store exists, create a new one and set it to cache
-    const store = await createKvStore<TValueType>(orbitDb, params);
+    const store = await createOrbitDbStore<TStoreType>(orbitDb, params);
     storeCache.current[storeAddress] = store;
 
     return store;
   };
 
-  const removeKvStore = async (address: string): Promise<void> => {
-    logger.debug('Removing KV store from cache with address', address);
-    const store = storeCache.current[address];
-    if (store) {
-      await store.close();
-      delete storeCache.current[address];
-    }
-  };
-
-  const getFeedStore = async <TValueType extends {}>(
-    params: GetFeedStoreParams
-  ): Promise<FeedStore<TValueType>> => {
-    if (orbitDb == null) {
-      throw Error('OrbitDB instance is not defined');
-    }
-
-    const storeAddress = await getStoreAddress(orbitDb, 'feed', params);
-    const cachedStore = storeCache.current[
-      storeAddress
-    ] as FeedStore<TValueType>;
-
-    if (cachedStore) {
-      logger.debug('Returning cached feed store for address', storeAddress);
-      return cachedStore;
-    }
-
+  const removeStore = async (store: Store): Promise<void> => {
     logger.debug(
-      'Loading new feed store in cache for address',
-      storeAddress,
-      'Params',
-      params
+      'Removing KV store from cache with address',
+      store.address.toString()
     );
-    // No store exists, create a new one and set it to cache
-    const store = await createFeedStore<TValueType>(orbitDb, params);
-    storeCache.current[storeAddress] = store;
-
-    return store;
-  };
-
-  const removeFeedStore = async (address: string): Promise<void> => {
-    logger.debug('Removing feed store from cache with address', address);
-    const store = storeCache.current[address];
-    if (store) {
-      await store.close();
-      delete storeCache.current[address];
-    }
+    store.events.removeAllListeners();
+    await store.close();
+    delete storeCache.current[store.address.toString()];
   };
 
   const contextData: StoreCacheContextData = {
-    getKvStore,
-    removeKvStore,
-    getFeedStore,
-    removeFeedStore,
+    isLoading: orbitDb == null || isLoadingOrbitDb,
+    getStore,
+    removeStore,
   };
 
   return (
-    <StoreCacheContext.Provider value={orbitDb ? contextData : null}>
+    <StoreCacheContext.Provider value={contextData}>
       {children}
     </StoreCacheContext.Provider>
   );

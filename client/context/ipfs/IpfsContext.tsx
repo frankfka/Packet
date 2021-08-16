@@ -6,13 +6,17 @@ import { createIpfs, stopIpfs } from './ipfsUtils';
 const logger = getLogger('IPFS-Context');
 
 type IpfsContextData = {
+  isLoading: boolean;
   ipfs?: IPFS;
   initError?: boolean;
 };
 
-export const IpfsContext = createContext<IpfsContextData>({});
+export const IpfsContext = createContext<IpfsContextData>({
+  isLoading: false,
+});
 
 export const IpfsContextProvider: React.FC = ({ children }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [ipfs, setIpfs] = useState<IPFS>();
   const [initError, setInitError] = useState(false);
 
@@ -29,6 +33,9 @@ export const IpfsContextProvider: React.FC = ({ children }) => {
       setInitError(false);
       setIpfs(undefined);
 
+      // Start loading
+      setIsLoading(true);
+
       try {
         const instance = await createIpfs();
         if (cancelled) return;
@@ -40,6 +47,9 @@ export const IpfsContextProvider: React.FC = ({ children }) => {
         if (cancelled) return;
         setInitError(true);
       }
+
+      // Stop loading
+      setIsLoading(false);
     };
 
     createIpfsInstance();
@@ -72,6 +82,7 @@ export const IpfsContextProvider: React.FC = ({ children }) => {
   }, [ipfs]);
 
   const contextData: IpfsContextData = {
+    isLoading,
     ipfs,
     initError,
   };

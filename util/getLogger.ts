@@ -1,4 +1,4 @@
-import log, { Logger } from 'loglevel';
+import log, { Logger, LogLevelDesc } from 'loglevel';
 import prefix from 'loglevel-plugin-prefix';
 
 prefix.reg(log);
@@ -15,12 +15,9 @@ prefix.apply(log, {
   },
 });
 
-const getLogger = (name: string): Logger => {
+const getLogger = (name: string, logLevel?: LogLevelDesc): Logger => {
   const logger = log.getLogger(name);
-  // TODO: Dynamic levels
-  // logger.enableAll();
-
-  logger.setLevel('info');
+  logger.setLevel(logLevel ?? 'info');
   return logger;
 };
 
