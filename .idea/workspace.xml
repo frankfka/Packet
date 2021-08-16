@@ -5,27 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e8b09ef-54aa-4687-914a-63efea80ab9c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/client/components/LoadingView/LoadingView.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/components/NavBar/NavBar.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/packet_logo.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/hooks/useIntakeUser.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/util/localStorage/localStorageConstants.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/util/orbitDb/user/userOrbitDbNameUtils.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/components/AppPage/AppPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/components/AppPage/AppPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/context/orbitDb/storeCacheContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/orbitDb/storeCacheContext.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/context/orbitDb/useOrbitDbKvStore.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/orbitDb/useOrbitDbKvStore.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/context/registryApp/registryAppContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/registryApp/registryAppContext.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/hooks/useRegistryUser.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/hooks/useRegistryUser.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/pages/registry/dashboard/CreateNewFeedDialog/CreateNewFeedSuccess.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/registry/dashboard/CreateNewFeedDialog/CreateNewFeedSuccess.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/pages/registry/dashboard/RegistryDashboardPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/registry/dashboard/RegistryDashboardPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/pages/registry/feed/RegistryFeedPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/registry/feed/RegistryFeedPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/pages/registry/feed/RegistryFeedPostsList/RegistryFeedPostsList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/registry/feed/RegistryFeedPostsList/RegistryFeedPostsList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/pages/registry/feed/feedPostViewerPage/RegistryFeedPostViewerPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/registry/feed/feedPostViewerPage/RegistryFeedPostViewerPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/util/dateUtils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/util/dateUtils.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/util/orbitDb/feed/FeedKvStoreData.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/util/orbitDb/feed/FeedKvStoreData.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/util/orbitDb/feed/feedOrbitDbNameUtils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/util/orbitDb/feed/feedOrbitDbNameUtils.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/util/orbitDb/feed/initFeedKvStoreData.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/util/orbitDb/feed/initFeedKvStoreData.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/favicon.ico" beforeDir="false" afterPath="$PROJECT_DIR$/public/favicon.ico" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/vercel.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/util/localStorage/currentUser.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/util/localStorage/currentUserLocalStorage.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/util/localStorage/userDbAddress.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/util/localStorage/userDbAddressLocalStorage.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/util/orbitDb/user/UserKvStoreData.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/util/orbitDb/user/UserKvStoreData.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/_app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/_app.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,8 +24,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="TypeScript File" />
         <option value="TypeScript JSX File" />
+        <option value="TypeScript File" />
       </list>
     </option>
   </component>
@@ -115,7 +104,7 @@
       <option name="presentableId" value="Default" />
       <updated>1628893858331</updated>
       <workItem from="1628893860653" duration="1111000" />
-      <workItem from="1628901643149" duration="39935000" />
+      <workItem from="1628901643149" duration="42211000" />
     </task>
     <servers />
   </component>

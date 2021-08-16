@@ -4,7 +4,7 @@ import useRegistryUser from '../../hooks/useRegistryUser';
 import {
   getCurrentUserIdFromLocalStorage,
   setCurrentUserIdFromLocalStorage,
-} from '../../util/localStorage/currentUser';
+} from '../../util/localStorage/currentUserLocalStorage';
 import FeedKvStoreData from '../../util/orbitDb/feed/FeedKvStoreData';
 import { createEthereumOrbitDbIdentity } from '../../util/orbitDb/orbitDbUtils';
 import UserKvStoreData from '../../util/orbitDb/user/UserKvStoreData';
@@ -13,7 +13,6 @@ import { useOrbitDb } from '../orbitDb/orbitDbContext';
 
 const logger = getLogger('RegistryApp-Context');
 
-// TODO: Test this!
 type RegistryAppContextData = {
   isReady: boolean; // Whether we have processed logic for initial render
   // User functions
@@ -76,7 +75,7 @@ export const RegistryAppContextProvider: React.FC = ({ children }) => {
 
   // Load current user on init
   useEffect(() => {
-    const currentUserId = getCurrentUserIdFromLocalStorage();
+    const currentUserId = getCurrentUserIdFromLocalStorage('registry');
 
     if (currentUserId) {
       logger.debug('Current user ID exists', currentUserId);
@@ -110,12 +109,12 @@ export const RegistryAppContextProvider: React.FC = ({ children }) => {
     registryUserState.setUserId(userId);
 
     // Update local storage
-    setCurrentUserIdFromLocalStorage(userId);
+    setCurrentUserIdFromLocalStorage('registry', userId);
   };
 
   // Logout function
   const logout = async () => {
-    setCurrentUserIdFromLocalStorage(undefined);
+    setCurrentUserIdFromLocalStorage('registry', undefined);
     orbitDbContext.setIdentity(undefined);
     registryUserState.setUserId(undefined);
   };
