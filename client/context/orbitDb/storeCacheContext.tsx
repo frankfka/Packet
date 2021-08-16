@@ -1,24 +1,17 @@
-import OrbitDB from 'orbit-db';
 import FeedStore from 'orbit-db-feedstore';
 import KeyValueStore from 'orbit-db-kvstore';
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { createContext, useContext, useEffect, useRef } from 'react';
 import getLogger from '../../../util/getLogger';
 import {
   createFeedStore,
   GetFeedStoreParams,
 } from '../../util/orbitDb/orbitDbFeedStoreUtils';
-import { useOrbitDb } from './orbitDbContext';
 import {
   createKvStore,
   GetKvStoreParams,
 } from '../../util/orbitDb/orbitDbKvStoreUtils';
 import { getStoreAddress } from '../../util/orbitDb/orbitDbStoreUtils';
+import { useOrbitDb } from './orbitDbContext';
 
 const logger = getLogger('StoreCache-Context');
 
@@ -41,6 +34,7 @@ export const StoreCacheContext = createContext<StoreCacheContextData | null>(
 
 // TODO: Combine feed and kv
 export const StoreCacheContextProvider: React.FC = ({ children }) => {
+  // TODO: Expose loading
   const { orbitDb } = useOrbitDb();
   const storeCache = useRef<
     Record<string, KeyValueStore<unknown> | FeedStore<unknown>>

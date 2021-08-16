@@ -2,6 +2,8 @@ import { Button, Grid, Paper, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import React, { useState } from 'react';
 import AppPage from '../../../components/AppPage/AppPage';
+import LoadingView from '../../../components/LoadingView/LoadingView';
+import SpacingContainer from '../../../components/SpacingContainer/SpacingContainer';
 import { useEthereumContext } from '../../../context/ethereum/ethereumContext';
 import { useRegistryApp } from '../../../context/registryApp/registryAppContext';
 import CreateNewFeedDialog from './CreateNewFeedDialog/CreateNewFeedDialog';
@@ -41,6 +43,13 @@ const RegistryDashboardPage = () => {
     setShowCreateFeedDialog(true);
   };
 
+  const isLoading =
+    !registryAppContext.isReady ||
+    registryAppContext.loadingUserData ||
+    registryAppContext.isLoadingUserFeeds;
+
+  const loadingView = isLoading && <LoadingView py={20} />;
+
   // Render the appropriate content for publications
   let publicationsContent: React.ReactElement | undefined = undefined;
   if (enableFeedInteraction) {
@@ -51,7 +60,7 @@ const RegistryDashboardPage = () => {
       publicationsContent = (
         <RegistryFeedList feeds={registryAppContext.loadedUserFeeds} />
       );
-    } else {
+    } else if (!isLoading) {
       publicationsContent = (
         <NoUserFeedsContent onCreateFeedClicked={onCreateFeedClicked} />
       );
@@ -66,39 +75,35 @@ const RegistryDashboardPage = () => {
         setIsOpen={setShowCreateFeedDialog}
       />
 
-      {/*Publications*/}
-      <Grid container alignItems="center" justifyContent="space-between">
-        <Grid item>
-          <Typography variant="h3" paragraph>
-            Manage Feeds
-          </Typography>
+      <SpacingContainer direction="column">
+        {/*Feeds title*/}
+        <Grid container alignItems="center" justifyContent="space-between">
+          <Grid item>
+            <Typography variant="h3">Manage Feeds</Typography>
+          </Grid>
+          <Grid item>
+            <Button
+              disabled={!enableFeedInteraction}
+              onClick={onCreateFeedClicked}
+              color="secondary"
+              startIcon={<AddIcon />}
+              variant="outlined"
+              size="large"
+            >
+              New
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item>
-          <Button
-            disabled={!enableFeedInteraction}
-            onClick={onCreateFeedClicked}
-            color="secondary"
-            startIcon={<AddIcon />}
-            variant="outlined"
-            size="large"
-          >
-            New
-          </Button>
-        </Grid>
-      </Grid>
 
-      <Paper>
-        {/*Request for auth*/}
-        {authInfoContent}
-        {/*Publications*/}
-        {publicationsContent}
-      </Paper>
-
-      {/*Debug*/}
-      {/*<Paper>*/}
-      {/*  <h4>Registry App Context Data:</h4>*/}
-      {/*  <pre>{JSON.stringify(registryAppContext, null, 2)}</pre>*/}
-      {/*</Paper>*/}
+        {/*Feeds main content*/}
+        <Paper>
+          {loadingView}
+          {/*Request for auth*/}
+          {authInfoContent}
+          {/*Publications*/}
+          {publicationsContent}
+        </Paper>
+      </SpacingContainer>
     </AppPage>
   );
 };

@@ -137,7 +137,7 @@ export const useOrbitDbKvStore = <TData>(
   }, [kvStore]);
 
   const state: KvStoreState<TData> = {
-    isLoadingStore,
+    isLoadingStore: isLoadingStore,
     store: kvStore,
     storeData: kvStoreData,
     reloadStoreData,

@@ -5,24 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e8b09ef-54aa-4687-914a-63efea80ab9c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/client/components/BackButton/BackButton.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/pages/registry/feed/CreatePostDialog/CreateNewPostSuccess.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/pages/registry/feed/CreatePostDialog/CreatePostDialog.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/pages/registry/feed/CreatePostDialog/fetchMarkdownFromIpfs.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/pages/registry/feed/feedPostViewerPage/RegistryFeedPostViewerPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/util/enforceStringForRouterQuery.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/components/LoadingView/LoadingView.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/components/NavBar/NavBar.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/packet_logo.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/context/ipfs/IpfsContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/ipfs/IpfsContext.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/context/orbitDb/feedStore/useFeedStore.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/orbitDb/useOrbitDbFeedStore.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/context/orbitDb/kvStore/useKvStore.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/orbitDb/useOrbitDbKvStore.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/components/AppPage/AppPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/components/AppPage/AppPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/context/orbitDb/storeCacheContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/orbitDb/storeCacheContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/context/orbitDb/useOrbitDbKvStore.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/orbitDb/useOrbitDbKvStore.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/hooks/useRegistryUser.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/hooks/useRegistryUser.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/pages/demo/HomePage/HomePageKvStoreSection.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/demo/HomePage/HomePageKvStoreSection.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/pages/registry/dashboard/RegistryFeedList/RegistryFeedList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/registry/dashboard/RegistryFeedList/RegistryFeedList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/pages/registry/dashboard/CreateNewFeedDialog/CreateNewFeedSuccess.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/registry/dashboard/CreateNewFeedDialog/CreateNewFeedSuccess.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/pages/registry/dashboard/RegistryDashboardPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/registry/dashboard/RegistryDashboardPage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/pages/registry/feed/RegistryFeedPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/registry/feed/RegistryFeedPage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/pages/registry/feed/RegistryFeedPostsList/RegistryFeedPostsList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/registry/feed/RegistryFeedPostsList/RegistryFeedPostsList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/pages/registry/feed/feedPostViewerPage/RegistryFeedPostViewerPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/registry/feed/feedPostViewerPage/RegistryFeedPostViewerPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/util/dateUtils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/util/dateUtils.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/util/orbitDb/feed/FeedKvStoreData.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/util/orbitDb/feed/FeedKvStoreData.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/util/orbitDb/feed/feedOrbitDbNameUtils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/util/orbitDb/feed/feedOrbitDbNameUtils.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/util/orbitDb/feed/initFeedKvStoreData.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/util/orbitDb/feed/initFeedKvStoreData.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/registry/feed/[feedRootKvStoreAddress].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/registry/feed/[feedRootKvStoreAddress].tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/registry/feed/[feedRootKvStoreAddress]/[postHash].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/registry/feed/[feedRootKvStoreAddress]/[postHash].tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/favicon.ico" beforeDir="false" afterPath="$PROJECT_DIR$/public/favicon.ico" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/vercel.svg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -80,6 +82,7 @@
       <recent name="$PROJECT_DIR$/client/pages/registry/feed/CreatePostDialog" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/public" />
       <recent name="$PROJECT_DIR$/client/context/orbitDb" />
       <recent name="$PROJECT_DIR$/client/context/" />
       <recent name="$PROJECT_DIR$/client/pages/registry/dashboard" />
@@ -112,7 +115,7 @@
       <option name="presentableId" value="Default" />
       <updated>1628893858331</updated>
       <workItem from="1628893860653" duration="1111000" />
-      <workItem from="1628901643149" duration="35509000" />
+      <workItem from="1628901643149" duration="39935000" />
     </task>
     <servers />
   </component>

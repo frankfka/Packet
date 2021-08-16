@@ -12,6 +12,7 @@ import React, { useEffect, useState } from 'react';
 import AppPage from '../../../components/AppPage/AppPage';
 import BackButton from '../../../components/BackButton/BackButton';
 import CenteredInfoContainer from '../../../components/CenteredInfoContainer/CenteredInfoContainer';
+import LoadingView from '../../../components/LoadingView/LoadingView';
 import SpacingContainer from '../../../components/SpacingContainer/SpacingContainer';
 import TextFieldWithCopy from '../../../components/TextFieldWithCopy/TextFieldWithCopy';
 import { useOrbitDbFeedStore } from '../../../context/orbitDb/useOrbitDbFeedStore';
@@ -123,7 +124,8 @@ const RegistryFeedPage: React.FC<Props> = ({ feedRootKvStoreAddress }) => {
   const isLoading =
     !registryAppContext.isReady ||
     registryAppContext.loadingUserData ||
-    postsFeedStoreState.isLoadingStore;
+    postsFeedStoreState.isLoadingStore ||
+    feedRootKvStoreState.isLoadingStore;
 
   const hasError =
     postsFeedStoreState.initError || feedRootKvStoreState.initError;
@@ -155,25 +157,26 @@ const RegistryFeedPage: React.FC<Props> = ({ feedRootKvStoreAddress }) => {
     return addPostToFeedStore(postsFeedStoreState.store, postData);
   };
 
-  // TODO: Loading && error views
-  let pageInfoContent: React.ReactElement | undefined = undefined;
+  // Loading & error views
+  let loadingAndErrorContent: React.ReactElement | undefined = undefined;
   if (isLoading) {
-    pageInfoContent = (
-      <CenteredInfoContainer>
-        <div>LOADING</div>
-      </CenteredInfoContainer>
-    );
+    loadingAndErrorContent = <LoadingView py={35} />;
   } else if (hasError) {
-    pageInfoContent = (
-      <CenteredInfoContainer>
-        <div>ERROR</div>
+    loadingAndErrorContent = (
+      <CenteredInfoContainer py={35}>
+        <Typography variant="h3" paragraph>
+          Something went wrong.
+        </Typography>
+        <Typography variant="subtitle1" paragraph>
+          Please refresh the page and try again.
+        </Typography>
       </CenteredInfoContainer>
     );
   }
 
   // Main page content for feed info (from KV store)
   let feedInfoContent: React.ReactElement | undefined = undefined;
-  if (hasFeedInfo && feedRootKvStoreState.storeData != null) {
+  if (!isLoading && hasFeedInfo && feedRootKvStoreState.storeData != null) {
     const { name, iconUri } = feedRootKvStoreState.storeData;
     feedInfoContent = (
       <Paper>
@@ -204,9 +207,7 @@ const RegistryFeedPage: React.FC<Props> = ({ feedRootKvStoreAddress }) => {
 
   // Main page content for feed posts
   let feedPostsContent: React.ReactElement | undefined = undefined;
-  if (hasFeedInfo && postsFeedStoreState.storeData) {
-    // TODO: also need to do loading state for feed posts
-
+  if (!isLoading && hasFeedInfo && postsFeedStoreState.storeData) {
     const openCreatePostDialog = () => setShowCreatePostDialog(true);
     feedPostsContent = (
       <div>
@@ -237,7 +238,6 @@ const RegistryFeedPage: React.FC<Props> = ({ feedRootKvStoreAddress }) => {
           ) : (
             <NoPostsContent onCreatePostClicked={openCreatePostDialog} />
           )}
-          {/*<pre>{JSON.stringify(postsFeedStoreState.storeData, null, 2)}</pre>*/}
         </Paper>
       </div>
     );
@@ -255,7 +255,7 @@ const RegistryFeedPage: React.FC<Props> = ({ feedRootKvStoreAddress }) => {
       {/*Main Content*/}
       <SpacingContainer direction="column" spacing={4}>
         <BackButton text="Dashboard" />
-        {pageInfoContent}
+        {loadingAndErrorContent}
         {feedInfoContent}
         {feedPostsContent}
       </SpacingContainer>

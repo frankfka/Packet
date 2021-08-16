@@ -21,6 +21,7 @@ const CreateNewFeedSuccess: React.FC<Props> = ({ createdFeedAddress }) => {
         value={createdFeedAddress}
         readOnly
         variant="outlined"
+        fullWidth
       />
     </CenteredInfoContainer>
   );

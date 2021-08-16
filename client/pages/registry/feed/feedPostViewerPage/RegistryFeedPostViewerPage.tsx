@@ -1,12 +1,13 @@
 import { createStyles, makeStyles, Paper, Typography } from '@material-ui/core';
-import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import Editor from 'rich-markdown-editor';
 import AppPage from '../../../../components/AppPage/AppPage';
 import BackButton from '../../../../components/BackButton/BackButton';
+import LoadingView from '../../../../components/LoadingView/LoadingView';
 import SpacingContainer from '../../../../components/SpacingContainer/SpacingContainer';
 import { useOrbitDbFeedStore } from '../../../../context/orbitDb/useOrbitDbFeedStore';
 import { useOrbitDbKvStore } from '../../../../context/orbitDb/useOrbitDbKvStore';
+import { dateFromIsoString, formatDate } from '../../../../util/dateUtils';
 import FeedKvStoreData from '../../../../util/orbitDb/feed/FeedKvStoreData';
 import { JsonFeedPostData } from '../../../../util/orbitDb/feed/FeedPostData';
 import { GetFeedStoreParams } from '../../../../util/orbitDb/orbitDbFeedStoreUtils';
@@ -30,7 +31,6 @@ const RegistryFeedPage: React.FC<Props> = ({
   postHash,
 }) => {
   const classes = useStyles();
-  const router = useRouter();
 
   // TODO: We can remove this after creating `useFeedStore`
   const [feedKvStoreParams, setFeedKvStoreParams] = useState<GetKvStoreParams>({
@@ -64,14 +64,18 @@ const RegistryFeedPage: React.FC<Props> = ({
     <AppPage>
       <SpacingContainer direction="column" spacing={4}>
         <BackButton />
-        {postData && (
+        {postData ? (
           <SpacingContainer direction="column">
             <Typography variant="h3">{postData.title}</Typography>
-            <Typography variant="caption">{postData.createdAt}</Typography>
+            <Typography variant="caption">
+              {formatDate(dateFromIsoString(postData.createdAt))}
+            </Typography>
             <Paper className={classes.postContentContainer}>
               <Editor readOnly defaultValue={postData.content} />
             </Paper>
           </SpacingContainer>
+        ) : (
+          <LoadingView py={35} />
         )}
       </SpacingContainer>
     </AppPage>

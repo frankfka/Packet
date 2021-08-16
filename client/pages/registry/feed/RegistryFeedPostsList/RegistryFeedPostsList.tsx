@@ -9,6 +9,7 @@ import {
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Link from 'next/Link';
 import React from 'react';
+import { dateFromIsoString, formatDate } from '../../../../util/dateUtils';
 import { JsonFeedPostData } from '../../../../util/orbitDb/feed/FeedPostData';
 
 type Props = {
@@ -42,6 +43,7 @@ const RegistryFeedPostsList: React.FC<Props> = ({
       <List className={classes.root}>
         {postHashes.map((hash, index) => {
           const post = posts[hash];
+          const createdAt = formatDate(dateFromIsoString(post.createdAt));
 
           return (
             <div key={hash}>
@@ -51,10 +53,7 @@ const RegistryFeedPostsList: React.FC<Props> = ({
                 )}/${encodeURIComponent(hash)}`}
               >
                 <ListItem className={classes.listItemContainer}>
-                  <ListItemText
-                    primary={post.title}
-                    secondary={post.createdAt}
-                  />
+                  <ListItemText primary={post.title} secondary={createdAt} />
                   <ChevronRightIcon />
                 </ListItem>
               </Link>

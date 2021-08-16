@@ -11,8 +11,8 @@ import {
 } from '../util/localStorage/userDbAddress';
 import FeedKvStoreData from '../util/orbitDb/feed/FeedKvStoreData';
 import {
+  getFeedId,
   getFeedPostsStoreName,
-  getFeedRootStoreName,
 } from '../util/orbitDb/feed/feedOrbitDbNameUtils';
 import initFeedKvStoreData from '../util/orbitDb/feed/initFeedKvStoreData';
 import { GetKvStoreParams } from '../util/orbitDb/orbitDbKvStoreUtils';
@@ -231,9 +231,12 @@ const useRegistryUser = (): UseRegistryUserState => {
       return;
     }
 
+    const feedId = getFeedId();
+    const feedPostsStoreName = getFeedPostsStoreName(feedId);
+
     // Create the posts feed store
     const newPostsFeedStore = await storeCacheContext.getFeedStore({
-      addressOrName: getFeedPostsStoreName(userId, name),
+      addressOrName: feedPostsStoreName,
       createParams: {
         accessController: {
           write: [userId],
@@ -252,10 +255,11 @@ const useRegistryUser = (): UseRegistryUserState => {
       name,
       iconUri,
       postsDbAddress: postsFeedStoreAddress,
+      publisherId: userId,
     };
 
     const newFeedkvStore = await storeCacheContext.getKvStore({
-      addressOrName: getFeedRootStoreName(userId, name),
+      addressOrName: feedId,
       createParams: {
         accessController: {
           write: [userId],

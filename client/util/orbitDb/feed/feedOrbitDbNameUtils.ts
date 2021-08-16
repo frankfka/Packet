@@ -1,13 +1,9 @@
-export const getFeedRootStoreName = (
-  publisherId: string,
-  feedName: string
-): string => {
-  return publisherId + '/feeds/' + feedName;
+import { nanoid } from 'nanoid';
+
+export const getFeedId = (): string => {
+  return 'feed-' + nanoid();
 };
 
-export const getFeedPostsStoreName = (
-  publisherId: string,
-  feedName: string
-): string => {
-  return getFeedRootStoreName(publisherId, feedName) + '/posts';
+export const getFeedPostsStoreName = (feedId: string): string => {
+  return feedId + '/posts';
 };
