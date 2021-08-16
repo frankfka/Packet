@@ -5,12 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e8b09ef-54aa-4687-914a-63efea80ab9c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/client/pages/registry/feed/RegistryFeedPostsList/RegistryFeedPostsList.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/util/getFeedAvatarPlaceholderName.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/registry/feed/[feedRootKvStoreAddress]/[postHash].tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/components/BackButton/BackButton.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/pages/registry/feed/CreatePostDialog/CreateNewPostSuccess.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/pages/registry/feed/CreatePostDialog/CreatePostDialog.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/pages/registry/feed/CreatePostDialog/fetchMarkdownFromIpfs.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/pages/registry/feed/feedPostViewerPage/RegistryFeedPostViewerPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/util/enforceStringForRouterQuery.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/context/ipfs/IpfsContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/ipfs/IpfsContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/context/orbitDb/feedStore/useFeedStore.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/orbitDb/useOrbitDbFeedStore.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/context/orbitDb/kvStore/useKvStore.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/orbitDb/useOrbitDbKvStore.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/hooks/useRegistryUser.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/hooks/useRegistryUser.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/pages/demo/HomePage/HomePageKvStoreSection.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/demo/HomePage/HomePageKvStoreSection.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/pages/registry/dashboard/RegistryFeedList/RegistryFeedList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/registry/dashboard/RegistryFeedList/RegistryFeedList.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/pages/registry/feed/RegistryFeedPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/registry/feed/RegistryFeedPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/pages/registry/feed/RegistryFeedPostsList/RegistryFeedPostsList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/registry/feed/RegistryFeedPostsList/RegistryFeedPostsList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/registry/feed/[feedRootKvStoreAddress].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/registry/feed/[feedRootKvStoreAddress].tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/registry/feed/[feedRootKvStoreAddress]/[postHash].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/registry/feed/[feedRootKvStoreAddress]/[postHash].tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,7 +62,7 @@
     <property name="code.cleanup.on.save" value="true" />
     <property name="javascript.nodejs.core.library.configured.version" value="16.3.0" />
     <property name="javascript.nodejs.core.library.typings.version" value="16.3.0" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/client/pages/registry/feed/CreatePostDialog" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -63,7 +76,12 @@
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/client/pages/registry/feed/CreatePostDialog" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/client/context/orbitDb" />
+      <recent name="$PROJECT_DIR$/client/context/" />
       <recent name="$PROJECT_DIR$/client/pages/registry/dashboard" />
       <recent name="$PROJECT_DIR$/pages/registry" />
     </key>
@@ -94,7 +112,7 @@
       <option name="presentableId" value="Default" />
       <updated>1628893858331</updated>
       <workItem from="1628893860653" duration="1111000" />
-      <workItem from="1628901643149" duration="25602000" />
+      <workItem from="1628901643149" duration="35509000" />
     </task>
     <servers />
   </component>

@@ -7,21 +7,26 @@ import {
   Typography,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import AppPage from '../../../components/AppPage/AppPage';
+import BackButton from '../../../components/BackButton/BackButton';
 import CenteredInfoContainer from '../../../components/CenteredInfoContainer/CenteredInfoContainer';
 import SpacingContainer from '../../../components/SpacingContainer/SpacingContainer';
 import TextFieldWithCopy from '../../../components/TextFieldWithCopy/TextFieldWithCopy';
-import { useFeedStore } from '../../../context/orbitDb/feedStore/useFeedStore';
-import { useKvStore } from '../../../context/orbitDb/kvStore/useKvStore';
+import { useOrbitDbFeedStore } from '../../../context/orbitDb/useOrbitDbFeedStore';
+import { useOrbitDbKvStore } from '../../../context/orbitDb/useOrbitDbKvStore';
 import { useRegistryApp } from '../../../context/registryApp/registryAppContext';
 import getFeedAvatarPlaceholderName from '../../../util/getFeedAvatarPlaceholderName';
 import FeedKvStoreData from '../../../util/orbitDb/feed/FeedKvStoreData';
-import { JsonFeedPostData } from '../../../util/orbitDb/feed/FeedPostData';
+import {
+  FeedPostData,
+  JsonFeedPostData,
+} from '../../../util/orbitDb/feed/FeedPostData';
+import { addPostToFeedStore } from '../../../util/orbitDb/feed/postFeedStoreUtils';
 import { GetFeedStoreParams } from '../../../util/orbitDb/orbitDbFeedStoreUtils';
 import { GetKvStoreParams } from '../../../util/orbitDb/orbitDbKvStoreUtils';
+import CreatePostDialog from './CreatePostDialog/CreatePostDialog';
 import RegistryFeedPostsList from './RegistryFeedPostsList/RegistryFeedPostsList';
 
 type Props = {
@@ -76,6 +81,8 @@ const RegistryFeedPage: React.FC<Props> = ({ feedRootKvStoreAddress }) => {
   const classes = useStyles();
   const router = useRouter();
 
+  const [showCreatePostDialog, setShowCreatePostDialog] = useState(false);
+
   const [feedKvStoreParams, setFeedKvStoreParams] =
     useState<GetKvStoreParams>();
   const [postsFeedStoreParams, setPostsFeedStoreParams] =
@@ -86,8 +93,9 @@ const RegistryFeedPage: React.FC<Props> = ({ feedRootKvStoreAddress }) => {
 
   // The stores associated with a feed
   const postsFeedStoreState =
-    useFeedStore<JsonFeedPostData>(postsFeedStoreParams);
-  const feedRootKvStoreState = useKvStore<FeedKvStoreData>(feedKvStoreParams);
+    useOrbitDbFeedStore<JsonFeedPostData>(postsFeedStoreParams);
+  const feedRootKvStoreState =
+    useOrbitDbKvStore<FeedKvStoreData>(feedKvStoreParams);
 
   // Reload root feed KV store
   useEffect(() => {
@@ -120,6 +128,33 @@ const RegistryFeedPage: React.FC<Props> = ({ feedRootKvStoreAddress }) => {
   const hasError =
     postsFeedStoreState.initError || feedRootKvStoreState.initError;
 
+  const hasFeedInfo =
+    feedRootKvStoreState.storeData != null &&
+    Object.keys(feedRootKvStoreState.storeData).length > 0;
+
+  // Handler for creating a post
+  const createPost = async (
+    title: string,
+    content: string
+  ): Promise<string | undefined> => {
+    if (hasError || !hasFeedInfo || isLoading) {
+      console.error('Attempted to create a post when not ready');
+      return;
+    }
+
+    if (postsFeedStoreState.store == null) {
+      console.error('Posts feed store is null');
+      return;
+    }
+
+    const postData: FeedPostData = {
+      title: title,
+      content: content,
+      createdAt: new Date(),
+    };
+    return addPostToFeedStore(postsFeedStoreState.store, postData);
+  };
+
   // TODO: Loading && error views
   let pageInfoContent: React.ReactElement | undefined = undefined;
   if (isLoading) {
@@ -136,9 +171,6 @@ const RegistryFeedPage: React.FC<Props> = ({ feedRootKvStoreAddress }) => {
     );
   }
 
-  const hasFeedInfo =
-    feedRootKvStoreState.storeData != null &&
-    Object.keys(feedRootKvStoreState.storeData).length > 0;
   // Main page content for feed info (from KV store)
   let feedInfoContent: React.ReactElement | undefined = undefined;
   if (hasFeedInfo && feedRootKvStoreState.storeData != null) {
@@ -174,6 +206,8 @@ const RegistryFeedPage: React.FC<Props> = ({ feedRootKvStoreAddress }) => {
   let feedPostsContent: React.ReactElement | undefined = undefined;
   if (hasFeedInfo && postsFeedStoreState.storeData) {
     // TODO: also need to do loading state for feed posts
+
+    const openCreatePostDialog = () => setShowCreatePostDialog(true);
     feedPostsContent = (
       <div>
         <SpacingContainer
@@ -184,7 +218,7 @@ const RegistryFeedPage: React.FC<Props> = ({ feedRootKvStoreAddress }) => {
           <Typography variant="h5">Posts</Typography>
           <Button
             disabled={false}
-            onClick={() => {}}
+            onClick={openCreatePostDialog}
             color="secondary"
             startIcon={<AddIcon />}
             variant="outlined"
@@ -201,9 +235,9 @@ const RegistryFeedPage: React.FC<Props> = ({ feedRootKvStoreAddress }) => {
               rootFeedStoreAddress={feedRootKvStoreAddress}
             />
           ) : (
-            <NoPostsContent onCreatePostClicked={() => {}} />
+            <NoPostsContent onCreatePostClicked={openCreatePostDialog} />
           )}
-          <pre>{JSON.stringify(postsFeedStoreState.storeData, null, 2)}</pre>
+          {/*<pre>{JSON.stringify(postsFeedStoreState.storeData, null, 2)}</pre>*/}
         </Paper>
       </div>
     );
@@ -211,17 +245,16 @@ const RegistryFeedPage: React.FC<Props> = ({ feedRootKvStoreAddress }) => {
 
   return (
     <AppPage>
+      {/*Create Post Dialog*/}
+      <CreatePostDialog
+        isOpen={showCreatePostDialog}
+        setIsOpen={setShowCreatePostDialog}
+        createPost={createPost}
+      />
+
+      {/*Main Content*/}
       <SpacingContainer direction="column" spacing={4}>
-        <div>
-          <Button
-            variant="text"
-            startIcon={<ChevronLeftIcon />}
-            size="large"
-            onClick={() => router.back()}
-          >
-            Dashboard
-          </Button>
-        </div>
+        <BackButton text="Dashboard" />
         {pageInfoContent}
         {feedInfoContent}
         {feedPostsContent}

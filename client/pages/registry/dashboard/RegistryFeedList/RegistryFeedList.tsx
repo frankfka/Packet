@@ -1,9 +1,7 @@
 import {
   Avatar,
-  Box,
   createStyles,
   Divider,
-  IconButton,
   List,
   ListItem,
   ListItemAvatar,
@@ -11,8 +9,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import Link from 'next/link';
+import Link from 'next/Link';
 import React, { MouseEventHandler } from 'react';
 import getFeedAvatarPlaceholderName from '../../../../util/getFeedAvatarPlaceholderName';
 import FeedKvStoreData from '../../../../util/orbitDb/feed/FeedKvStoreData';
@@ -65,12 +62,7 @@ const RegistryFeedList: React.FC<Props> = ({ feeds }) => {
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText primary={feed.name} />
-                  <Box alignItems="center" display="flex">
-                    <IconButton onClick={onInfoClicked}>
-                      <InfoOutlinedIcon />
-                    </IconButton>
-                    <ChevronRightIcon />
-                  </Box>
+                  <ChevronRightIcon />
                 </ListItem>
               </Link>
 

@@ -1,6 +1,5 @@
-import React, { useContext } from 'react';
 import { IPFS } from 'ipfs-core-types';
-import { createContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import getLogger from '../../../util/getLogger';
 import { createIpfs, stopIpfs } from './ipfsUtils';
 

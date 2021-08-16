@@ -2,9 +2,9 @@ import { mapValues } from 'lodash';
 import KeyValueStore from 'orbit-db-kvstore';
 import { useEffect, useState } from 'react';
 import getLogger from '../../util/getLogger';
-import { useKvStore } from '../context/orbitDb/kvStore/useKvStore';
 import { useOrbitDb } from '../context/orbitDb/orbitDbContext';
 import { useStoreCache } from '../context/orbitDb/storeCacheContext';
+import { useOrbitDbKvStore } from '../context/orbitDb/useOrbitDbKvStore';
 import {
   getStoreAddressForUser,
   setStoreAddressForUser,
@@ -46,7 +46,8 @@ const useRegistryUser = (): UseRegistryUserState => {
     useState<GetKvStoreParams>();
 
   const orbitDbContext = useOrbitDb();
-  const userKvStoreState = useKvStore<UserKvStoreData>(userKvStoreParams);
+  const userKvStoreState =
+    useOrbitDbKvStore<UserKvStoreData>(userKvStoreParams);
 
   // Initialize user on load
   useEffect(() => {

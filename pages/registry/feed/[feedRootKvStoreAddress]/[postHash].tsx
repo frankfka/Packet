@@ -1,11 +1,20 @@
 import { useRouter } from 'next/router';
+import RegistryFeedPostViewerPage from '../../../../client/pages/registry/feed/feedPostViewerPage/RegistryFeedPostViewerPage';
+import enforceStringForRouterQuery from '../../../../client/util/enforceStringForRouterQuery';
 
 /*
 Packet Registry Feed Post Viewer Page
  */
 export default function RegistryFeedPostViewer() {
   const router = useRouter();
-  const { postHash } = router.query;
+  const { postHash, feedRootKvStoreAddress } = router.query;
 
-  return <div>{postHash}</div>;
+  return (
+    <RegistryFeedPostViewerPage
+      feedRootKvStoreAddress={enforceStringForRouterQuery(
+        feedRootKvStoreAddress
+      )}
+      postHash={enforceStringForRouterQuery(postHash)}
+    />
+  );
 }

@@ -7,7 +7,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import Link from 'next/link';
+import Link from 'next/Link';
 import React from 'react';
 import { JsonFeedPostData } from '../../../../util/orbitDb/feed/FeedPostData';
 
@@ -45,7 +45,6 @@ const RegistryFeedPostsList: React.FC<Props> = ({
 
           return (
             <div key={hash}>
-              {/*TODO: Link*/}
               <Link
                 href={`/registry/feed/${encodeURIComponent(
                   rootFeedStoreAddress

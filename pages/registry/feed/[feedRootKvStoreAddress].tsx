@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import RegistryFeedPage from '../../../client/pages/registry/feed/RegistryFeedPage';
+import enforceStringForRouterQuery from '../../../client/util/enforceStringForRouterQuery';
 
 /*
 Packet Registry Feed Details Page
@@ -10,9 +11,9 @@ export default function RegistryFeedDetails() {
 
   return (
     <RegistryFeedPage
-      feedRootKvStoreAddress={
-        typeof feedRootKvStoreAddress === 'string' ? feedRootKvStoreAddress : ''
-      }
+      feedRootKvStoreAddress={enforceStringForRouterQuery(
+        feedRootKvStoreAddress
+      )}
     />
   );
 }

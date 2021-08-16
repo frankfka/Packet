@@ -1,11 +1,11 @@
 import KeyValueStore from 'orbit-db-kvstore';
 import { useEffect, useState } from 'react';
-import getLogger from '../../../../util/getLogger';
+import getLogger from '../../../util/getLogger';
 import {
   GetKvStoreParams,
   OrbitKvStoreData,
-} from '../../../util/orbitDb/orbitDbKvStoreUtils';
-import { useStoreCache } from '../storeCacheContext';
+} from '../../util/orbitDb/orbitDbKvStoreUtils';
+import { useStoreCache } from './storeCacheContext';
 
 export const logger = getLogger('UseKvStore');
 
@@ -20,7 +20,7 @@ export type KvStoreState<TData> = {
   initError?: boolean;
 };
 
-export const useKvStore = <TData>(
+export const useOrbitDbKvStore = <TData>(
   // Optional params so that we don't need to create the store when creating the hook
   params?: GetKvStoreParams
 ): KvStoreState<TData> => {

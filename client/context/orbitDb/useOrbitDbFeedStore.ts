@@ -1,11 +1,11 @@
 import FeedStore from 'orbit-db-feedstore';
 import { useEffect, useState } from 'react';
-import getLogger from '../../../../util/getLogger';
+import getLogger from '../../../util/getLogger';
 import {
   GetFeedStoreParams,
   OrbitFeedDocsKeyedByHash,
-} from '../../../util/orbitDb/orbitDbFeedStoreUtils';
-import { useStoreCache } from '../storeCacheContext';
+} from '../../util/orbitDb/orbitDbFeedStoreUtils';
+import { useStoreCache } from './storeCacheContext';
 
 export const logger = getLogger('UseFeedStore');
 
@@ -21,7 +21,7 @@ export type FeedStoreState<TDocType> = {
 This is very similar to useKvStore, but we shouldn't generalize this to support
 pagination
  */
-export const useFeedStore = <TDocType>(
+export const useOrbitDbFeedStore = <TDocType>(
   params?: GetFeedStoreParams
 ): FeedStoreState<TDocType> => {
   const storeCacheContext = useStoreCache();
