@@ -8,10 +8,11 @@ import SpacingContainer from '../../../../components/SpacingContainer/SpacingCon
 import { useOrbitDbFeedStore } from '../../../../context/orbitDb/useOrbitDbFeedStore';
 import { useOrbitDbKvStore } from '../../../../context/orbitDb/useOrbitDbKvStore';
 import { dateFromIsoString, formatDate } from '../../../../util/dateUtils';
-import FeedKvStoreData from '../../../../util/orbitDb/feed/FeedKvStoreData';
-import { JsonFeedPostData } from '../../../../util/orbitDb/feed/FeedPostData';
-import { GetFeedStoreParams } from '../../../../util/orbitDb/orbitDbFeedStoreUtils';
-import { GetKvStoreParams } from '../../../../util/orbitDb/orbitDbKvStoreUtils';
+import {
+  FeedKvStoreData,
+  JsonFeedPostData,
+} from '../../../../util/orbitDb/feed/FeedDataTypes';
+import { GetOrbitDbStoreParams } from '../../../../util/orbitDb/OrbitDbTypes';
 
 type Props = {
   feedRootKvStoreAddress: string;
@@ -33,11 +34,13 @@ const RegistryFeedPage: React.FC<Props> = ({
   const classes = useStyles();
 
   // TODO: We can remove this after creating `useFeedStore`
-  const [feedKvStoreParams, setFeedKvStoreParams] = useState<GetKvStoreParams>({
+  const [feedKvStoreParams, setFeedKvStoreParams] = useState<
+    Omit<GetOrbitDbStoreParams, 'type'>
+  >({
     addressOrName: feedRootKvStoreAddress,
   });
   const [postsFeedStoreParams, setPostsFeedStoreParams] =
-    useState<GetFeedStoreParams>();
+    useState<Omit<GetOrbitDbStoreParams, 'type'>>();
 
   // The stores associated with a feed
   const postsFeedStoreState =

@@ -10,7 +10,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Link from 'next/Link';
 import React from 'react';
 import { dateFromIsoString, formatDate } from '../../../../util/dateUtils';
-import { JsonFeedPostData } from '../../../../util/orbitDb/feed/FeedPostData';
+import { JsonFeedPostData } from '../../../../util/orbitDb/feed/FeedDataTypes';
 
 type Props = {
   rootFeedStoreAddress: string;

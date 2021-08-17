@@ -92,12 +92,15 @@ export const useOrbitDbKvStore = <TData>(
         // Setup listeners
         initOrbitDbStoreListeners(storeInstance, {
           replicated: (address) => {
-            logger.debug('db.events.replicated', address.toString());
+            logger.info('db.events.replicated', address.toString());
             reloadStoreDataForStore(storeInstance);
           },
           write: (address, entry) => {
             logger.debug('db.events.write', address.toString(), 'Entry', entry);
             reloadStoreDataForStore(storeInstance);
+          },
+          peer: (address) => {
+            logger.info('db.events.peer', address);
           },
         });
 

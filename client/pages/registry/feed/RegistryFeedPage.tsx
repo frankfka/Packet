@@ -12,6 +12,7 @@ import React, { useEffect, useState } from 'react';
 import AppPage from '../../../components/AppPage/AppPage';
 import BackButton from '../../../components/BackButton/BackButton';
 import CenteredInfoContainer from '../../../components/CenteredInfoContainer/CenteredInfoContainer';
+import ErrorView from '../../../components/ErrorView/ErrorView';
 import LoadingView from '../../../components/LoadingView/LoadingView';
 import SpacingContainer from '../../../components/SpacingContainer/SpacingContainer';
 import TextFieldWithCopy from '../../../components/TextFieldWithCopy/TextFieldWithCopy';
@@ -19,14 +20,13 @@ import { useOrbitDbFeedStore } from '../../../context/orbitDb/useOrbitDbFeedStor
 import { useOrbitDbKvStore } from '../../../context/orbitDb/useOrbitDbKvStore';
 import { useRegistryApp } from '../../../context/registryApp/registryAppContext';
 import getFeedAvatarPlaceholderName from '../../../util/getFeedAvatarPlaceholderName';
-import FeedKvStoreData from '../../../util/orbitDb/feed/FeedKvStoreData';
 import {
+  FeedKvStoreData,
   FeedPostData,
   JsonFeedPostData,
-} from '../../../util/orbitDb/feed/FeedPostData';
+} from '../../../util/orbitDb/feed/FeedDataTypes';
 import { addPostToFeedStore } from '../../../util/orbitDb/feed/postFeedStoreUtils';
-import { GetFeedStoreParams } from '../../../util/orbitDb/orbitDbFeedStoreUtils';
-import { GetKvStoreParams } from '../../../util/orbitDb/orbitDbKvStoreUtils';
+import { GetOrbitDbStoreParams } from '../../../util/orbitDb/OrbitDbTypes';
 import CreatePostDialog from './CreatePostDialog/CreatePostDialog';
 import RegistryFeedPostsList from './RegistryFeedPostsList/RegistryFeedPostsList';
 
@@ -85,9 +85,9 @@ const RegistryFeedPage: React.FC<Props> = ({ feedRootKvStoreAddress }) => {
   const [showCreatePostDialog, setShowCreatePostDialog] = useState(false);
 
   const [feedKvStoreParams, setFeedKvStoreParams] =
-    useState<GetKvStoreParams>();
+    useState<Omit<GetOrbitDbStoreParams, 'type'>>();
   const [postsFeedStoreParams, setPostsFeedStoreParams] =
-    useState<GetFeedStoreParams>();
+    useState<Omit<GetOrbitDbStoreParams, 'type'>>();
 
   // Context
   const registryAppContext = useRegistryApp();
@@ -162,16 +162,7 @@ const RegistryFeedPage: React.FC<Props> = ({ feedRootKvStoreAddress }) => {
   if (isLoading) {
     loadingAndErrorContent = <LoadingView py={35} />;
   } else if (hasError) {
-    loadingAndErrorContent = (
-      <CenteredInfoContainer py={35}>
-        <Typography variant="h3" paragraph>
-          Something went wrong.
-        </Typography>
-        <Typography variant="subtitle1" paragraph>
-          Please refresh the page and try again.
-        </Typography>
-      </CenteredInfoContainer>
-    );
+    loadingAndErrorContent = <ErrorView py={35} />;
   }
 
   // Main page content for feed info (from KV store)

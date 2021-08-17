@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import RegistryFeedPostViewerPage from '../../../../client/pages/registry/feed/feedPostViewerPage/RegistryFeedPostViewerPage';
+import RegistryFeedPostViewerPage from '../../../../client/pages/registry/feed/RegistryFeedPostViewerPage/RegistryFeedPostViewerPage';
 import enforceStringForRouterQuery from '../../../../client/util/enforceStringForRouterQuery';
 
 /*

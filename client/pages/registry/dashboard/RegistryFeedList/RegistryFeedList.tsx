@@ -10,9 +10,9 @@ import {
 } from '@material-ui/core';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Link from 'next/Link';
-import React, { MouseEventHandler } from 'react';
+import React from 'react';
 import getFeedAvatarPlaceholderName from '../../../../util/getFeedAvatarPlaceholderName';
-import FeedKvStoreData from '../../../../util/orbitDb/feed/FeedKvStoreData';
+import { FeedKvStoreData } from '../../../../util/orbitDb/feed/FeedDataTypes';
 
 type Props = {
   feeds: Record<string, FeedKvStoreData>;
@@ -41,10 +41,6 @@ const RegistryFeedList: React.FC<Props> = ({ feeds }) => {
       <List className={classes.root}>
         {feedAddresses.map((address, index) => {
           const feed = feeds[address];
-          const onInfoClicked: MouseEventHandler<HTMLButtonElement> = (e) => {
-            e.stopPropagation();
-            console.log('Hello');
-          };
 
           // First letter of the name, capitalized
           const avatarPlaceholderName = getFeedAvatarPlaceholderName(feed.name);

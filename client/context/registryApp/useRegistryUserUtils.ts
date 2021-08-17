@@ -2,32 +2,32 @@ import { mapValues } from 'lodash';
 import FeedStore from 'orbit-db-feedstore';
 import KeyValueStore from 'orbit-db-kvstore';
 import { useEffect, useState } from 'react';
-import getLogger from '../../util/getLogger';
-import { useOrbitDb } from '../context/orbitDb/orbitDbContext';
-import { useStoreCache } from '../context/orbitDb/storeCacheContext';
-import { useOrbitDbKvStore } from '../context/orbitDb/useOrbitDbKvStore';
+import getLogger from '../../../util/getLogger';
 import {
-  getStoreAddressForUserFromLocalStorage,
-  setStoreAddressForUserToLocalStorage,
-} from '../util/localStorage/userDbAddressLocalStorage';
+  getLocalStorageRegistryUserStoreAddress,
+  setLocalStorageRegistryUserStoreAddress,
+} from '../../util/localStorage/registryUserDbAddress';
 import {
   FeedKvStoreData,
   FeedPostData,
-} from '../util/orbitDb/feed/FeedDataTypes';
+} from '../../util/orbitDb/feed/FeedDataTypes';
 import {
   getFeedId,
   getFeedPostsStoreName,
   saveFeedKvStoreData,
-} from '../util/orbitDb/feed/postFeedStoreUtils';
-import { GetOrbitDbStoreParams } from '../util/orbitDb/OrbitDbTypes';
-import RegistryUserKvStoreData from '../util/orbitDb/user/RegistryUserKvStoreData';
+} from '../../util/orbitDb/feed/postFeedStoreUtils';
+import { GetOrbitDbStoreParams } from '../../util/orbitDb/OrbitDbTypes';
+import RegistryUserKvStoreData from '../../util/orbitDb/user/RegistryUserKvStoreData';
 import {
   addFeedToUserData,
   deleteFeedFromUserData,
   getRegistryUserDbName,
   isRegistryUserStoreInitialized,
   saveRegistryUserStoreData,
-} from '../util/orbitDb/user/registryUserUtils';
+} from '../../util/orbitDb/user/registryUserUtils';
+import { useOrbitDb } from '../orbitDb/orbitDbContext';
+import { useStoreCache } from '../orbitDb/storeCacheContext';
+import { useOrbitDbKvStore } from '../orbitDb/useOrbitDbKvStore';
 
 const logger = getLogger('UseRegistryUser');
 
@@ -47,7 +47,7 @@ export type UseRegistryUserState = {
 };
 
 // A lightweight wrapper with util methods for interacting with the user root store
-const useRegistryUser = (): UseRegistryUserState => {
+const useRegistryUserUtils = (): UseRegistryUserState => {
   const [userId, setUserId] = useState<string>();
   const [userKvStoreParams, setUserKvStoreParams] =
     useState<Omit<GetOrbitDbStoreParams, 'type'>>();
@@ -66,10 +66,8 @@ const useRegistryUser = (): UseRegistryUserState => {
       }
 
       // See if we have created a user store previously
-      const existingStoreAddress = getStoreAddressForUserFromLocalStorage(
-        'registry',
-        userId
-      );
+      const existingStoreAddress =
+        getLocalStorageRegistryUserStoreAddress(userId);
 
       if (existingStoreAddress) {
         // Load the existing store
@@ -123,8 +121,7 @@ const useRegistryUser = (): UseRegistryUserState => {
           feeds: [],
         });
         // Save to localstorage
-        setStoreAddressForUserToLocalStorage(
-          'registry',
+        setLocalStorageRegistryUserStoreAddress(
           userId,
           userKvStoreState.store.address.toString()
         );
@@ -353,4 +350,4 @@ const useRegistryUser = (): UseRegistryUserState => {
   return hookData;
 };
 
-export default useRegistryUser;
+export default useRegistryUserUtils;

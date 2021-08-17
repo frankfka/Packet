@@ -29,6 +29,29 @@ export const saveFeedKvStoreData = async (
   await feedKvStore.put('publisherId', feedStoreData.publisherId);
 };
 
+export const getFeedKvStoreData = (
+  feedKvStore: KeyValueStore<unknown>
+): FeedKvStoreData => {
+  return {
+    ...feedKvStore.all,
+  } as unknown as FeedKvStoreData;
+};
+
+export const getPostsFromFeedStore = (
+  store: FeedStore<JsonFeedPostData>
+): Record<string, JsonFeedPostData> => {
+  return store
+    .iterator({
+      limit: -1, // Get all documents
+      reverse: true, // Most recent documents first
+    })
+    .collect()
+    .reduce((obj: Record<string, JsonFeedPostData>, entry) => {
+      obj[entry.hash] = entry.payload.value as JsonFeedPostData;
+      return obj;
+    }, {});
+};
+
 export const addPostToFeedStore = async (
   store: FeedStore<JsonFeedPostData>,
   postData: FeedPostData
