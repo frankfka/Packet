@@ -5,34 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e8b09ef-54aa-4687-914a-63efea80ab9c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/client/context/intakeApp/IntakeAppTypes.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/context/intakeApp/intakeAppContext.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/context/intakeApp/intakeAppUtils.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/context/intakeApp/useIntakeUserUtils.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/pages/intake/dashboard/IntakeDashboardPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/pages/intake/dashboard/IntakeLatestPostsList/IntakeLatestPostsList.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/pages/intake/dashboard/IntakeManageSubscriptionsDialog/IntakeManageSubscriptionsDialog.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/pages/intake/viewer/IntakeViewerPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/util/localStorage/intakeCurrentUser.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/intake/index.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/intake/viewer.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/pages/intake/subscriptions/IntakeAddSubscriptionDialog/IntakeAddSubscriptionDialog.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/pages/intake/subscriptions/IntakeLoadedSubscriptionsList/IntakeSubscriptionsList.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/pages/intake/subscriptions/IntakeSubscriptionsPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/intake/subscriptions.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/components/NavBar/NavBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/components/NavBar/NavBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/context/intakeApp/intakeAppContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/intakeApp/intakeAppContext.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/context/orbitDb/orbitDbContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/orbitDb/orbitDbContext.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/context/orbitDb/storeCacheContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/orbitDb/storeCacheContext.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/context/orbitDb/useOrbitDbKvStore.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/orbitDb/useOrbitDbKvStore.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/context/registryApp/registryAppContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/registryApp/registryAppContext.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/hooks/useIntakeUser.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/components/ErrorView/ErrorView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/hooks/useRegistryUser.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/registryApp/useRegistryUserUtils.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/pages/registry/dashboard/RegistryFeedList/RegistryFeedList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/registry/dashboard/RegistryFeedList/RegistryFeedList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/pages/registry/feed/RegistryFeedPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/registry/feed/RegistryFeedPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/pages/registry/feed/RegistryFeedPostsList/RegistryFeedPostsList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/registry/feed/RegistryFeedPostsList/RegistryFeedPostsList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/pages/registry/feed/feedPostViewerPage/RegistryFeedPostViewerPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/registry/feed/RegistryFeedPostViewerPage/RegistryFeedPostViewerPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/util/localStorage/currentUserLocalStorage.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/util/localStorage/registryCurrentUserId.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/util/localStorage/localStorageConstants.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/util/localStorage/userDbAddressLocalStorage.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/util/localStorage/registryUserDbAddress.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/util/orbitDb/feed/postFeedStoreUtils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/util/orbitDb/feed/postFeedStoreUtils.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/_app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/_app.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/registry/feed/[feedRootKvStoreAddress]/[postHash].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/registry/feed/[feedRootKvStoreAddress]/[postHash].tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/pages/demo/AuthenticationPage/AuthWithEthereumContent.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/pages/demo/AuthenticationPage/AuthenticationPage.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/pages/demo/HomePage/HomePage.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/pages/demo/HomePage/HomePageIpfsSection.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/pages/demo/HomePage/HomePageKvStoreSection.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/pages/demo/HomePage/HomePageOrbitDbSection.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/pages/intake/dashboard/IntakeDashboardPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/intake/dashboard/IntakeDashboardPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/pages/intake/dashboard/IntakeLatestPostsList/IntakeLatestPostsList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/intake/dashboard/IntakeLatestPostsList/IntakeLatestPostsList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/pages/intake/dashboard/IntakeManageSubscriptionsDialog/IntakeManageSubscriptionsDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/HomePage.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,7 +114,7 @@
       <option name="presentableId" value="Default" />
       <updated>1628893858331</updated>
       <workItem from="1628893860653" duration="1111000" />
-      <workItem from="1628901643149" duration="71101000" />
+      <workItem from="1628901643149" duration="80449000" />
     </task>
     <servers />
   </component>

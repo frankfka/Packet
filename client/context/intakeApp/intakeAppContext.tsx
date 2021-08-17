@@ -67,8 +67,12 @@ export const IntakeAppContextProvider: React.FC = ({ children }) => {
     store: KeyValueStore<unknown>
   ) => {
     await store.load();
-    logger.debug('Reloading data for root feed KV store');
     const newFeedInfo = getFeedKvStoreData(store);
+
+    logger.debug(
+      'Reloading data for root feed KV store',
+      getFeedKvStoreData(store)
+    );
 
     // Set new data
     setSubscriptionData((prevState) => {
@@ -87,7 +91,8 @@ export const IntakeAppContextProvider: React.FC = ({ children }) => {
     // If we don't have a post store, we need to initialize it
     if (
       subscribedFeedStores != null &&
-      subscribedFeedStores[rootAddress].postsStore == null
+      subscribedFeedStores[rootAddress].postsStore == null &&
+      !!newFeedInfo.postsDbAddress
     ) {
       const postsStore = await storeCache.getStore<FeedStore<JsonFeedPostData>>(
         {
@@ -167,7 +172,6 @@ export const IntakeAppContextProvider: React.FC = ({ children }) => {
     stores: SubscribedFeedStore;
     data?: SubscribedFeedData;
   }> => {
-    // Get root store
     const rootFeedStore = await storeCache.getStore<KeyValueStore<unknown>>({
       addressOrName: rootFeedAddress,
       type: 'keyvalue',
@@ -309,6 +313,12 @@ export const IntakeAppContextProvider: React.FC = ({ children }) => {
         return {
           ...prevState,
           [feedAddress]: loadedData,
+        };
+      });
+    } else {
+      setSubscriptionData((prevState) => {
+        return {
+          ...prevState,
         };
       });
     }

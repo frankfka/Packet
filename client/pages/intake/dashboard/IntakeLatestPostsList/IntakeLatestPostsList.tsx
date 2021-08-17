@@ -11,13 +11,12 @@ import {
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Link from 'next/Link';
 import React from 'react';
-import { SubscribedFeedData } from '../../../../context/intakeApp/IntakeAppTypes';
-import { getAllFeedPosts } from '../../../../context/intakeApp/intakeAppUtils';
+import { FeedPostWithFeedInfo } from '../../../../context/intakeApp/IntakeAppTypes';
 import { dateFromIsoString, formatDate } from '../../../../util/dateUtils';
 import getFeedAvatarPlaceholderName from '../../../../util/getFeedAvatarPlaceholderName';
 
 type Props = {
-  loadedFeeds: Record<string, SubscribedFeedData>;
+  feedPosts: FeedPostWithFeedInfo[];
 };
 
 const useStyles = makeStyles((theme) =>
@@ -33,15 +32,13 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-const IntakeLatestPostsList: React.FC<Props> = ({ loadedFeeds }) => {
+const IntakeLatestPostsList: React.FC<Props> = ({ feedPosts }) => {
   const classes = useStyles();
-
-  const posts = getAllFeedPosts(loadedFeeds);
 
   return (
     <div>
       <List className={classes.root}>
-        {posts.map((feedPost, index) => {
+        {feedPosts.map((feedPost, index) => {
           const post = feedPost.post;
           const feedInfo = feedPost.feedInfo;
 
@@ -78,7 +75,7 @@ const IntakeLatestPostsList: React.FC<Props> = ({ loadedFeeds }) => {
                 </ListItem>
               </Link>
 
-              {index < posts.length - 1 && (
+              {index < feedPosts.length - 1 && (
                 <Divider variant="middle" component="li" />
               )}
             </div>

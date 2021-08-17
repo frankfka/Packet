@@ -83,7 +83,7 @@ export const OrbitDbContextProvider: React.FC = ({ children }) => {
       }
 
       logger.debug('Instance:', orbitDb);
-      logger.info('OrbitDB ID', orbitDb?.id);
+      logger.debug('OrbitDB ID', orbitDb?.id);
       // @ts-ignore
       logger.debug('Current identity ID', orbitDb.identity._id);
     };

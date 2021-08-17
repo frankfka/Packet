@@ -46,7 +46,7 @@ export const StoreCacheContextProvider: React.FC = ({ children }) => {
       return cachedStore;
     }
 
-    logger.info(
+    logger.debug(
       'Loading new store in cache for address',
       storeAddress,
       'Params',
