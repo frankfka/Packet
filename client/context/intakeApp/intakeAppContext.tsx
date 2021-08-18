@@ -13,6 +13,7 @@ import {
 } from '../../util/orbitDb/orbitDbStoreUtils';
 import { useStoreCache } from '../orbitDb/storeCacheContext';
 import { SubscribedFeedData, SubscribedFeedStore } from './IntakeAppTypes';
+import { isFeedInfoLoaded } from './intakeAppUtils';
 import useIntakeUserUtils from './useIntakeUserUtils';
 
 const logger = getLogger('IntakeApp-Context', 'debug');
@@ -69,10 +70,12 @@ export const IntakeAppContextProvider: React.FC = ({ children }) => {
     await store.load();
     const newFeedInfo = getFeedKvStoreData(store);
 
-    logger.debug(
-      'Reloading data for root feed KV store',
-      getFeedKvStoreData(store)
-    );
+    logger.debug('Reloading data for root feed KV store', newFeedInfo);
+
+    if (!isFeedInfoLoaded(newFeedInfo)) {
+      logger.debug('Incomplete feed info, aborting setting data');
+      return;
+    }
 
     // Set new data
     setSubscriptionData((prevState) => {
@@ -333,14 +336,20 @@ export const IntakeAppContextProvider: React.FC = ({ children }) => {
     }
     // Remove from user
     intakeUserState.removeSubscription(feedAddress);
+
+    const feedInfoStore = subscribedFeedStores[feedAddress].feedInfoStore;
+    const feedPostsStore = subscribedFeedStores[feedAddress].postsStore;
+
     // Remove listeners and from stores
-    removeOrbitDbStoreListeners(
-      subscribedFeedStores[feedAddress].feedInfoStore
-    );
-    const postsStore = subscribedFeedStores[feedAddress].postsStore;
-    if (postsStore != null) {
-      removeOrbitDbStoreListeners(postsStore);
+    removeOrbitDbStoreListeners(feedInfoStore);
+    storeCache.removeStore(feedInfoStore);
+
+    if (feedPostsStore != null) {
+      storeCache.removeStore(feedPostsStore);
+      removeOrbitDbStoreListeners(feedPostsStore);
     }
+
+    // Remove from state
     delete subscribedFeedStores[feedAddress];
     // Remove data
     setSubscriptionData((prevState) => {

@@ -12,8 +12,6 @@ export type SubscribedFeedStore = {
   postsStore?: FeedStore<JsonFeedPostData>; // Optional as we can't load this without first loading the feedInfoStore
 };
 
-export type LoadedSubscribedFeedStore = Required<SubscribedFeedStore>;
-
 // Object that wraps all the data associated with a feed
 export type SubscribedFeedData = {
   feedInfo: FeedKvStoreData;

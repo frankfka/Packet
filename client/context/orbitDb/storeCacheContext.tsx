@@ -65,6 +65,7 @@ export const StoreCacheContextProvider: React.FC = ({ children }) => {
       store.address.toString()
     );
     store.events.removeAllListeners();
+    await store.drop();
     await store.close();
     delete storeCache.current[store.address.toString()];
   };

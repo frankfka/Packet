@@ -1,11 +1,7 @@
 import { sortBy } from 'lodash';
 import { dateFromIsoString } from '../../util/dateUtils';
-import {
-  FeedPostWithFeedInfo,
-  LoadedSubscribedFeedStore,
-  SubscribedFeedData,
-  SubscribedFeedStore,
-} from './IntakeAppTypes';
+import { FeedKvStoreData } from '../../util/orbitDb/feed/FeedDataTypes';
+import { FeedPostWithFeedInfo, SubscribedFeedData } from './IntakeAppTypes';
 
 // Currently in reverse chronological order
 export const getAllFeedPosts = (
@@ -38,8 +34,6 @@ export const getAllFeedPosts = (
   ).reverse();
 };
 
-export const isFeedLoaded = (
-  wrappedStore: SubscribedFeedStore
-): wrappedStore is LoadedSubscribedFeedStore => {
-  return wrappedStore.postsStore != null;
+export const isFeedInfoLoaded = (feedData: FeedKvStoreData): boolean => {
+  return !!feedData.name && !!feedData.postsDbAddress && !!feedData.publisherId;
 };

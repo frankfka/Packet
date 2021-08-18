@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) =>
     containerRoot: {
       width: '100%',
       padding: theme.spacing(4, 4, 2, 4),
+      marginBottom: theme.spacing(4),
     },
     listItemContainer: {
       padding: theme.spacing(2, 0),
@@ -44,6 +45,8 @@ const IntakeSubscriptionsList: React.FC<Props> = ({
   onDeleteClicked,
 }) => {
   const classes = useStyles();
+
+  console.log('Loaded feeds', loadedFeeds);
 
   return (
     <div>

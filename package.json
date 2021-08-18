@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev_local_swarm": "LOCAL_SWARM=true next dev",
+    "run_local_swarm": "star-signal",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

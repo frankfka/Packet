@@ -4,7 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8e8b09ef-54aa-4687-914a-63efea80ab9c" name="Changes" comment="" />
+    <list default="true" id="8e8b09ef-54aa-4687-914a-63efea80ab9c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/context/intakeApp/IntakeAppTypes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/intakeApp/IntakeAppTypes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/context/intakeApp/intakeAppContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/intakeApp/intakeAppContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/context/intakeApp/intakeAppUtils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/intakeApp/intakeAppUtils.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/context/ipfs/ipfsConfig.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/ipfs/ipfsConfig.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/context/orbitDb/storeCacheContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/orbitDb/storeCacheContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/pages/intake/subscriptions/IntakeLoadedSubscriptionsList/IntakeSubscriptionsList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/intake/subscriptions/IntakeLoadedSubscriptionsList/IntakeSubscriptionsList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -68,7 +77,7 @@
       <recent name="$PROJECT_DIR$/client/context/" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="npm.dev_local_swarm">
     <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -79,8 +88,19 @@
       <envs />
       <method v="2" />
     </configuration>
+    <configuration name="dev_local_swarm" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev_local_swarm" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.dev_local_swarm" />
         <item itemvalue="npm.dev" />
       </list>
     </recent_temporary>
@@ -94,7 +114,8 @@
       <option name="presentableId" value="Default" />
       <updated>1628893858331</updated>
       <workItem from="1628893860653" duration="1111000" />
-      <workItem from="1628901643149" duration="80850000" />
+      <workItem from="1628901643149" duration="82038000" />
+      <workItem from="1629247446083" duration="2330000" />
     </task>
     <servers />
   </component>
