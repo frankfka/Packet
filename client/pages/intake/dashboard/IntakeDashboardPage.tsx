@@ -1,6 +1,6 @@
 import { Button, Grid, Paper, Typography } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
-import Link from 'next/Link';
+import Link from 'next/link';
 import React from 'react';
 import AppPage from '../../../components/AppPage/AppPage';
 import CenteredInfoContainer from '../../../components/CenteredInfoContainer/CenteredInfoContainer';

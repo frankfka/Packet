@@ -7,7 +7,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import Link from 'next/Link';
+import Link from 'next/link';
 import React from 'react';
 import { dateFromIsoString, formatDate } from '../../../../util/dateUtils';
 import { JsonFeedPostData } from '../../../../util/orbitDb/feed/FeedDataTypes';

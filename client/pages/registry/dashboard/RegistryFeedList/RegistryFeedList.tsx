@@ -9,7 +9,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import Link from 'next/Link';
+import Link from 'next/link';
 import React from 'react';
 import getFeedAvatarPlaceholderName from '../../../../util/getFeedAvatarPlaceholderName';
 import { FeedKvStoreData } from '../../../../util/orbitDb/feed/FeedDataTypes';

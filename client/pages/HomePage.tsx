@@ -1,6 +1,6 @@
 import { Box, Button, Typography } from '@material-ui/core';
-import Image from 'next/Image';
-import Link from 'next/Link';
+import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 
 import AppLogo from '../../public/packet_logo.svg';

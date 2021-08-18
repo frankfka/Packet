@@ -4,27 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8e8b09ef-54aa-4687-914a-63efea80ab9c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/client/pages/intake/subscriptions/IntakeAddSubscriptionDialog/IntakeAddSubscriptionDialog.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/pages/intake/subscriptions/IntakeLoadedSubscriptionsList/IntakeSubscriptionsList.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/pages/intake/subscriptions/IntakeSubscriptionsPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/index.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/intake/subscriptions.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/components/NavBar/NavBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/components/NavBar/NavBar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/context/intakeApp/intakeAppContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/intakeApp/intakeAppContext.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/context/orbitDb/orbitDbContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/orbitDb/orbitDbContext.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/context/orbitDb/storeCacheContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/context/orbitDb/storeCacheContext.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/pages/demo/AuthenticationPage/AuthWithEthereumContent.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/pages/demo/AuthenticationPage/AuthenticationPage.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/pages/demo/HomePage/HomePage.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/pages/demo/HomePage/HomePageIpfsSection.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/pages/demo/HomePage/HomePageKvStoreSection.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/pages/demo/HomePage/HomePageOrbitDbSection.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/pages/intake/dashboard/IntakeDashboardPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/intake/dashboard/IntakeDashboardPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/pages/intake/dashboard/IntakeLatestPostsList/IntakeLatestPostsList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/intake/dashboard/IntakeLatestPostsList/IntakeLatestPostsList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/pages/intake/dashboard/IntakeManageSubscriptionsDialog/IntakeManageSubscriptionsDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/HomePage.tsx" afterDir="false" />
-    </list>
+    <list default="true" id="8e8b09ef-54aa-4687-914a-63efea80ab9c" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -114,7 +94,7 @@
       <option name="presentableId" value="Default" />
       <updated>1628893858331</updated>
       <workItem from="1628893860653" duration="1111000" />
-      <workItem from="1628901643149" duration="80449000" />
+      <workItem from="1628901643149" duration="80850000" />
     </task>
     <servers />
   </component>

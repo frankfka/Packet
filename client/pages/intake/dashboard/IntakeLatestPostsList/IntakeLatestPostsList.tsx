@@ -9,7 +9,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import Link from 'next/Link';
+import Link from 'next/link';
 import React from 'react';
 import { FeedPostWithFeedInfo } from '../../../../context/intakeApp/IntakeAppTypes';
 import { dateFromIsoString, formatDate } from '../../../../util/dateUtils';

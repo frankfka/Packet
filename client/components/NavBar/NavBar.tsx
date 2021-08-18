@@ -7,8 +7,8 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import Image from 'next/Image';
-import Link from 'next/Link';
+import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 
